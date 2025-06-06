@@ -1,0 +1,359 @@
+@extends('layout.app')
+
+@section('title', 'Riwayat Pembayaran')
+
+@section('content')
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Riwayat Pembayaran</h1>
+            <p class="text-white">Kelola dan pantau pembayaran paket fotografer Anda</p>
+        </div>
+
+        <!-- Filter & Search -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <form method="GET" class="flex flex-wrap gap-4 items-end">
+                <div class="flex-1 min-w-64">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
+                    <input type="text" name="search" id="search" value="{{ request('search') }}"
+                           placeholder="Kode pembayaran, nama paket, atau fotografer..."
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select name="status" id="status" 
+                            class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                        <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>Diproses</option>
+                        <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Lunas</option>
+                        <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>Gagal</option>
+                        <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="method" class="block text-sm font-medium text-gray-700 mb-2">Metode</label>
+                    <select name="method" id="method"
+                            class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Semua Metode</option>
+                        <option value="bank_transfer" {{ request('method') === 'bank_transfer' ? 'selected' : '' }}>Transfer Bank</option>
+                        <option value="e_wallet" {{ request('method') === 'e_wallet' ? 'selected' : '' }}>E-Wallet</option>
+                        <option value="credit_card" {{ request('method') === 'credit_card' ? 'selected' : '' }}>Kartu Kredit</option>
+                        <option value="cash" {{ request('method') === 'cash' ? 'selected' : '' }}>Tunai</option>
+                    </select>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button type="submit" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                        Cari
+                    </button>
+                    <a href="{{ route('customer.payment.index') }}" 
+                       class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-200">
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Payments List -->
+        @if($payments->count() > 0)
+        <div class="space-y-4">
+            @foreach($payments as $payment)
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+                    <!-- Payment Info -->
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">
+                                    {{ $payment->package->name }}
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-1">
+                                    Fotografer: <span class="font-medium">{{ $payment->package->user->name }}</span>
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    Kode: {{ $payment->payment_code }}
+                                </p>
+                            </div>
+                            
+                            <!-- Status Badge -->
+                            @switch($payment->status)
+                                @case('pending')
+                                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
+                                        Menunggu Pembayaran
+                                    </span>
+                                    @break
+                                @case('processing')
+                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                                        Diproses
+                                    </span>
+                                    @break
+                                @case('completed')
+                                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                                        Lunas
+                                    </span>
+                                    @break
+                                @case('failed')
+                                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+                                        Gagal
+                                    </span>
+                                    @break
+                                @case('cancelled')
+                                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
+                                        Dibatalkan
+                                    </span>
+                                    @break
+                            @endswitch
+                        </div>
+                        
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-500">Total:</span>
+                                <p class="font-semibold text-lg text-blue-600">
+                                    Rp {{ number_format($payment->amount, 0, ',', '.') }}
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <span class="text-gray-500">Metode:</span>
+                                <p class="font-medium capitalize">
+                                    {{ str_replace('_', ' ', $payment->payment_method) }}
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <span class="text-gray-500">Cicilan:</span>
+                                <p class="font-medium">
+                                    {{ $payment->installments->where('status', 'paid')->count() }}/{{ $payment->installments->count() }}
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <span class="text-gray-500">Tanggal Pesan:</span>
+                                <p class="font-medium">
+                                    {{ $payment->created_at->format('d M Y') }}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar for Multiple Installments -->
+                        @if($payment->installments->count() > 1)
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs text-gray-600 mb-1">
+                                <span>Progress Pembayaran</span>
+                                <span>{{ number_format($payment->getPaymentProgress(), 1) }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                                     style="width: {{ $payment->getPaymentProgress() }}%"></div>
+                            </div>
+                        </div>
+                        @endif
+                        
+                        <!-- Next Payment Due -->
+                        @if($payment->status === 'pending' || $payment->status === 'processing')
+                            @php
+                                $nextInstallment = $payment->installments->where('status', 'pending')->first();
+                            @endphp
+                            @if($nextInstallment)
+                            <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                                <p class="text-sm text-yellow-800">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    Pembayaran berikutnya: <strong>Rp {{ number_format($nextInstallment->amount, 0, ',', '.') }}</strong>
+                                    @if($nextInstallment->due_date)
+                                        pada {{ $nextInstallment->due_date->format('d M Y') }}
+                                    @endif
+                                </p>
+                            </div>
+                            @endif
+                        @endif
+                        
+                        <!-- Expired Warning -->
+                        @if($payment->status === 'pending' && $payment->isExpired())
+                        <div class="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
+                            <p class="text-sm text-red-600">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                Pembayaran telah expired pada {{ $payment->expired_at->format('d M Y, H:i') }}
+                            </p>
+                        </div>
+                        @endif
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="mt-4 lg:mt-0 lg:ml-6 flex flex-col gap-2">
+                        <a href="{{ route('customer.payment.show', $payment) }}" 
+                           class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200 text-center text-sm">
+                            <i class="fas fa-eye mr-1"></i>
+                            Detail Pembayaran
+                        </a>
+                        
+                        @if($payment->status === 'pending' && !$payment->isExpired())
+                            @php
+                                $pendingInstallment = $payment->installments->where('status', 'pending')->first();
+                            @endphp
+                            @if($pendingInstallment)
+                            <a href="{{ route('customer.payment.pay', $pendingInstallment) }}" 
+                               class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200 text-center text-sm">
+                                <i class="fas fa-credit-card mr-1"></i>
+                                Bayar Sekarang
+                            </a>
+                            @endif
+                            
+                            <form action="{{ route('customer.payment.cancel', $payment) }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit" 
+                                        onclick="return confirm('Apakah Anda yakin ingin membatalkan pembayaran ini?')"
+                                        class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-200 text-sm w-full">
+                                    <i class="fas fa-times mr-1"></i>
+                                    Batalkan
+                                </button>
+                            </form>
+                        @endif
+                        
+                        @if($payment->status === 'completed')
+                        <a href="{{ route('customer.booking.show', $payment->booking) }}" 
+                           class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-200 text-center text-sm">
+                            <i class="fas fa-calendar mr-1"></i>
+                            Lihat Booking
+                        </a>
+                        @endif
+                        
+                        @if($payment->status === 'failed')
+                        <a href="{{ route('customer.payment.retry', $payment) }}" 
+                           class="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700 transition duration-200 text-center text-sm">
+                            <i class="fas fa-redo mr-1"></i>
+                            Coba Lagi
+                        </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-8">
+            {{ $payments->withQueryString()->links() }}
+        </div>
+
+        @else
+        <!-- Empty State -->
+        <div class="bg-white rounded-lg shadow-md p-12 text-center">
+            <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Belum Ada Riwayat Pembayaran</h3>
+            <p class="text-gray-600 mb-6">Anda belum memiliki pembayaran. Pilih paket fotografer dan mulai proses pemesanan.</p>
+            <a href="{{ route('customer.photographers') }}" 
+               class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 inline-block">
+                <i class="fas fa-camera mr-2"></i>
+                Cari Fotografer
+            </a>
+        </div>
+        @endif
+
+        <!-- Summary Cards -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center">
+                    <div class="p-2 bg-yellow-100 rounded-lg">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Menunggu Pembayaran</p>
+                        <p class="text-xl font-semibold text-gray-900">{{ $pendingCount ?? 0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center">
+                    <div class="p-2 bg-blue-100 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Diproses</p>
+                        <p class="text-xl font-semibold text-gray-900">{{ $processingCount ?? 0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center">
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Lunas</p>
+                        <p class="text-xl font-semibold text-gray-900">{{ $completedCount ?? 0 }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex items-center">
+                    <div class="p-2 bg-indigo-100 rounded-lg">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Total Pengeluaran</p>
+                        <p class="text-xl font-semibold text-gray-900">
+                            Rp {{ number_format($totalSpent ?? 0, 0, ',', '.') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit form when filter changes
+    const statusSelect = document.getElementById('status');
+    const methodSelect = document.getElementById('method');
+    
+    if (statusSelect) {
+        statusSelect.addEventListener('change', function() {
+            this.form.submit();
+        });
+    }
+    
+    if (methodSelect) {
+        methodSelect.addEventListener('change', function() {
+            this.form.submit();
+        });
+    }
+    
+    // Search with debounce
+    const searchInput = document.getElementById('search');
+    let searchTimeout;
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                this.form.submit();
+            }, 500);
+        });
+    }
+});
+</script>
+@endpush
