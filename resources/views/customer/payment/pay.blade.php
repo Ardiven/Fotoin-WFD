@@ -51,7 +51,7 @@
                         <div class="flex-1">
                             <h3 class="text-lg font-semibold text-gray-900">{{ $installment->payment->package->name }}</h3>
                             <p class="text-gray-600 mb-2">
-                                Fotografer: <span class="font-medium">{{ $installment->payment->package->photographer->user->name }}</span>
+                                Fotografer: <span class="font-medium">{{ $installment->payment->package->user->name }}</span>
                             </p>
                             <p class="text-sm text-gray-500">
                                 Kode Pembayaran: {{ $installment->payment->payment_code }}
@@ -158,7 +158,7 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Pilih Metode Pembayaran</h2>
                     
-                    <form action="{{ route('customer.payment.process', $installment) }}" method="POST" id="paymentForm">
+                    <form action="{{ route('customer.payment.process', $installment->payment) }}" method="POST" id="paymentForm">
                         @csrf
                         
                         <div class="space-y-4">

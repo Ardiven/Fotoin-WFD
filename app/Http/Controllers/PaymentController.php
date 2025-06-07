@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Package;
 use App\Models\Payment;
+use Illuminate\Support\Str;
 use App\Models\PaymentProof;
 use Illuminate\Http\Request;
 use App\Models\PaymentInstallment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+
 
 class PaymentController extends Controller
 {
@@ -83,24 +84,34 @@ class PaymentController extends Controller
 
     public function uploadProof(Request $request, Payment $payment)
     {
-        $this->authorizePayment($payment);
         
-        $request->validate([
-            'proof_file' => 'required|image|max:2048', // max 2MB
-            'installment_id' => 'nullable|exists:payment_installments,id',
-        ]);
 
-        $file = $request->file('proof_file');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $path = $file->storeAs('payment_proofs', $filename, 'public');
+        $this->authorizePayment($payment);
 
-        PaymentProof::create([
-            'payment_id' => $payment->id,
-            'file_path' => $path,
-            'original_name' => $file->getClientOriginalName(),
-        ]);
+        if ($payment->status !== 'pending') {
+            return redirect()->route('customer.payment.show', $payment)->with('error', 'Pembayaran tidak dapat diupload bukti pembayaran.');
+        }
 
-        return back()->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi admin.');
+        $proof = new PaymentProof();
+        $proof->payment_id = $payment->id;
+        $imagePath = null;
+        if ($request->hasFile('payment_proof')) {
+            $image = $request->file('payment_proof');
+            $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('payment_proofs', $imageName, 'public');
+        }
+
+        $proof->file_path = $imagePath;
+        $proof->original_name = $request->payment_proof->getClientOriginalName();
+        $proof->save();
+        $payment->status = 'processing';
+        $payment->save();
+
+        // $file = $request->file('proof_file');
+        // $filename = time() . '_' . $file->getClientOriginalName();
+        // $path = $file->storeAs('payment_proofs', $filename, 'public');
+
+        return redirect()->route('customer.payment.show', $payment)->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi admin.');
     }
 
     public function cancel(Payment $payment)
@@ -168,6 +179,20 @@ class PaymentController extends Controller
         if ($payment->user_id !== Auth::id()) {
             abort(403, 'Unauthorized access to payment.');
         }
+    }
+        public function showPay(Payment $payment)
+    {
+        $installment = $payment->installments->where('status', 'pending')->first();
+        return view('customer.payment.pay', compact('installment', 'payment'));
+    }
+    public function pay(Payment $payment, Request $request)
+    {
+        $request->validate([
+            'payment_method'=>'required',
+        ]);
+        $paymentMethod = $request->payment_method;
+        $installment = $payment->installments->where('status', 'pending')->first();
+        return view('customer.payment.uploadProof', compact('payment', 'installment', 'paymentMethod'));
     }
 }
 
@@ -258,4 +283,6 @@ class AdminPaymentController extends Controller
     public function custHist(){
         return view('payment.cust_history');
     }
+
+
 }

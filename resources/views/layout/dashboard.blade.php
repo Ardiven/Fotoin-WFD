@@ -241,11 +241,8 @@
                         <li>
                             <a href="#" 
                             class="w-full flex items-center px-4 py-3 rounded-lg transition-all text-white/80 hover:text-white hover:bg-white/10">
-                                <i class="fas fa-comments mr-3"></i>
-                                Chat
-                                <span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                    3
-                                </span>
+                                <i class="fas fa-money-bill mr-3"></i>
+                                Payments
                             </a>
                         </li>
                         <li>

@@ -192,11 +192,8 @@
                         </a>
                         
                         @if($payment->status === 'pending' && !$payment->isExpired())
-                            @php
-                                $pendingInstallment = $payment->installments->where('status', 'pending')->first();
-                            @endphp
-                            @if($pendingInstallment)
-                            <a href="{{ route('customer.payment.pay', $pendingInstallment) }}" 
+                            @if($payment->installments->where('status', 'pending')->first())
+                            <a href="{{ route('customer.payment.pay', $payment) }}" 
                                class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200 text-center text-sm">
                                 <i class="fas fa-credit-card mr-1"></i>
                                 Bayar Sekarang

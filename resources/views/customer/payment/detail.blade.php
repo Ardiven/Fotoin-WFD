@@ -9,8 +9,8 @@
         <div class="mb-8">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Detail Pembayaran</h1>
-                    <p class="text-gray-600">Kode Pembayaran: <span class="font-semibold">{{ $payment->payment_code }}</span></p>
+                    <h1 class="text-3xl font-bold text-white mb-2">Detail Pembayaran</h1>
+                    <p class="text-white">Kode Pembayaran: <span class="font-semibold">{{ $payment->payment_code }}</span></p>
                 </div>
                 
                 <!-- Status Badge -->

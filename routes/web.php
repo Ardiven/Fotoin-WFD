@@ -73,7 +73,9 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/customer/payment/detail/{payment}', [PaymentController::class, 'uploadProof'])->name('customer.payment.proof');
     Route::post('/customer/payment/detail/{payment}/cancel', [PaymentController::class, 'cancel'])->name('customer.payment.cancel');
     Route::get('/customer/payment', [PaymentController::class, 'index'])->name('customer.payment.index');
-    Route::get('/customer/payment/pay', [PaymentController::class, 'pay'])->name('customer.payment.pay');
+    Route::get('/customer/payment/pay/{payment}', [PaymentController::class, 'showPay'])->name('customer.payment.pay');
+    Route::post('/customer/payment/upload-proof/{payment}', [PaymentController::class, 'uploadProof'])->name('customer.payment.upload.store');
+    Route::post('/customer/payment-process/{payment}', [PaymentController::class, 'pay'])->name('customer.payment.process');
 });
 
 
