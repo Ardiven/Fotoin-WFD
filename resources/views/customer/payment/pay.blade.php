@@ -156,60 +156,72 @@
 
                 <!-- Payment Method Selection -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Pilih Metode Pembayaran</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">Instruksi Pembayaran</h2>
                     
                     <form action="{{ route('customer.payment.process', $installment->payment) }}" method="POST" id="paymentForm">
                         @csrf
                         
-                        <div class="space-y-4">
-                            <!-- Bank Transfer -->
-                            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                                <input type="radio" name="payment_method" value="bank_transfer" class="text-blue-600 focus:ring-blue-500">
-                                <div class="ml-3 flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                        </svg>
+                        @if($payment->status === 'pending' || $payment->status === 'processing' && !$payment->isExpired())
+                        <div class="mt-1 bg-white rounded-lg p-6">
+                            @switch($payment->payment_method)
+                                @case('bank_transfer')
+                                    <div class="space-y-4">
+                                        <h4 class="font-medium text-blue-800">Transfer ke salah satu rekening berikut:</h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div class="bg-white p-4 rounded-lg border">
+                                                <div class="flex items-center mb-2">
+                                                    <img src="https://via.placeholder.com/30x20" alt="BCA" class="mr-2">
+                                                    <span class="font-medium">Bank BCA</span>
+                                                </div>
+                                                <p class="text-sm text-gray-600">No. Rekening: 1234567890</p>
+                                                <p class="text-sm text-gray-600">a.n. Studio Fotografer</p>
+                                            </div>
+                                            <div class="bg-white p-4 rounded-lg border">
+                                                <div class="flex items-center mb-2">
+                                                    <img src="https://via.placeholder.com/30x20" alt="Mandiri" class="mr-2">
+                                                    <span class="font-medium">Bank Mandiri</span>
+                                                </div>
+                                                <p class="text-sm text-gray-600">No. Rekening: 0987654321</p>
+                                                <p class="text-sm text-gray-600">a.n. Studio Fotografer</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900">Transfer Bank</p>
-                                        <p class="text-sm text-gray-500">BCA, BNI, BRI, Mandiri</p>
+                                    @break
+                                    
+                                @case('e_wallet')
+                                    <div class="space-y-4">
+                                        <h4 class="font-medium text-blue-800">Transfer ke E-Wallet:</h4>
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            <div class="bg-white p-3 rounded-lg border text-center">
+                                                <img src="https://via.placeholder.com/40x40" alt="GoPay" class="mx-auto mb-2">
+                                                <p class="text-xs text-gray-600">081234567890</p>
+                                            </div>
+                                            <div class="bg-white p-3 rounded-lg border text-center">
+                                                <img src="https://via.placeholder.com/40x40" alt="OVO" class="mx-auto mb-2">
+                                                <p class="text-xs text-gray-600">081234567890</p>
+                                            </div>
+                                            <div class="bg-white p-3 rounded-lg border text-center">
+                                                <img src="https://via.placeholder.com/40x40" alt="DANA" class="mx-auto mb-2">
+                                                <p class="text-xs text-gray-600">081234567890</p>
+                                            </div>
+                                            <div class="bg-white p-3 rounded-lg border text-center">
+                                                <img src="https://via.placeholder.com/40x40" alt="ShopeePay" class="mx-auto mb-2">
+                                                <p class="text-xs text-gray-600">081234567890</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </label>
-
-                            <!-- E-Wallet -->
-                            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                                <input type="radio" name="payment_method" value="e_wallet" class="text-blue-600 focus:ring-blue-500">
-                                <div class="ml-3 flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                        </svg>
+                                    @break
+                                    
+                                @case('cash')
+                                    <div class="space-y-2">
+                                        <h4 class="font-medium text-blue-800">Pembayaran Tunai:</h4>
+                                        <p class="text-blue-700">Pembayaran akan dilakukan saat bertemu di lokasi pemotretan.</p>
+                                        <p class="text-sm text-blue-600">Pastikan untuk membawa uang pas sesuai nominal.</p>
                                     </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900">E-Wallet</p>
-                                        <p class="text-sm text-gray-500">GoPay, OVO, DANA, ShopeePay</p>
-                                    </div>
-                                </div>
-                            </label>
-
-                            <!-- Credit Card -->
-                            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                                <input type="radio" name="payment_method" value="credit_card" class="text-blue-600 focus:ring-blue-500">
-                                <div class="ml-3 flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900">Kartu Kredit</p>
-                                        <p class="text-sm text-gray-500">Visa, Mastercard, JCB</p>
-                                    </div>
-                                </div>
-                            </label>
+                                    @break
+                            @endswitch
                         </div>
+                        @endif
                         
                         @error('payment_method')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -319,19 +331,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Form validation
-    paymentForm.addEventListener('submit', function(e) {
-        let selectedMethod = false;
-        paymentMethods.forEach(method => {
-            if (method.checked) {
-                selectedMethod = true;
-            }
-        });
+    // paymentForm.addEventListener('submit', function(e) {
+    //     let selectedMethod = false;
+    //     paymentMethods.forEach(method => {
+    //         if (method.checked) {
+    //             selectedMethod = true;
+    //         }
+    //     });
         
-        if (!selectedMethod) {
-            e.preventDefault();
-            alert('Silakan pilih metode pembayaran terlebih dahulu.');
-            return false;
-        }
+    //     if (!selectedMethod) {
+    //         e.preventDefault();
+    //         alert('Silakan pilih metode pembayaran terlebih dahulu.');
+    //         return false;
+    //     }
         
         // Show loading state
         const submitBtn = this.querySelector('button[type="submit"]');

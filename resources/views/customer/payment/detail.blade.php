@@ -302,6 +302,15 @@
                class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 transition duration-200">
                 Kembali ke Daftar Pembayaran
             </a>
+            @if($payment->status === 'processing' && !$payment->isExpired() && (!$payment->proofs->where('status', 'pending')->count() > 0 && $payment->proofs->where('status', 'rejected')->count() > 0))
+                <form action="{{ route('customer.payment.process', $payment) }}" method="POST" id="paymentForm">
+                    @csrf
+                    <button type="submit" 
+                            class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                        Upload Bukti Pembayaran
+                    </button>
+                </form>
+            @endif
             
             @if($payment->status === 'pending' && !$payment->isExpired())
             <form action="{{ route('customer.payment.cancel', $payment) }}" method="POST" class="inline">

@@ -239,7 +239,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" 
+                            <a href="{{route('photographer.payment.index')}}" 
                             class="w-full flex items-center px-4 py-3 rounded-lg transition-all text-white/80 hover:text-white hover:bg-white/10">
                                 <i class="fas fa-money-bill mr-3"></i>
                                 Payments

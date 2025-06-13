@@ -191,8 +191,8 @@
                             Detail Pembayaran
                         </a>
                         
-                        @if($payment->status === 'pending' && !$payment->isExpired())
-                            @if($payment->installments->where('status', 'pending')->first())
+                        @if($payment->status === 'pending' || ($payment->status === 'processing' && $payment->installments->count()>1) && !$payment->isExpired())
+                            @if($payment->installments->where('status', 'pending')->first() || $payment->installments->count()>1)
                             <a href="{{ route('customer.payment.pay', $payment) }}" 
                                class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200 text-center text-sm">
                                 <i class="fas fa-credit-card mr-1"></i>
@@ -211,13 +211,13 @@
                             </form>
                         @endif
                         
-                        @if($payment->status === 'completed')
+                        {{-- @if($payment->status === 'completed')
                         <a href="{{ route('customer.booking.show', $payment->booking) }}" 
                            class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition duration-200 text-center text-sm">
                             <i class="fas fa-calendar mr-1"></i>
                             Lihat Booking
                         </a>
-                        @endif
+                        @endif --}}
                         
                         @if($payment->status === 'failed')
                         <a href="{{ route('customer.payment.retry', $payment) }}" 

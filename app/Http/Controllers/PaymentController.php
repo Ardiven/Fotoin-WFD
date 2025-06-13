@@ -17,14 +17,51 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        $payments = Payment::with(['package', 'installments', 'proofs'])
+        if(Auth::user()->hasRole('customer')) {
+            $payments = Payment::with(['package', 'installments', 'proofs'])
             ->where('user_id', Auth::id())
             ->latest()
             ->paginate(10);
-        if(Auth::user()->hasRole('customer')) {
-            return view('customer.payment.index', compact('payments'));
+
+
+            $pendingCount = Payment::where('status', 'pending')->Where('user_id', Auth::id())->count();
+
+            $completedCount = Payment::where('status', 'completed')->Where('user_id', Auth::id())->count();
+
+            $processingCount = Payment::where('status', 'processing')->Where('user_id', Auth::id())->count();
+
+            $totalRevenue = Payment::where('status', 'completed')->Where('user_id', Auth::id())->sum('amount');
+
+            return view('customer.payment.index', compact(
+                'payments',
+                'pendingCount',
+                'completedCount',
+                'processingCount',
+                'totalRevenue'
+            ));
+        }elseif (Auth::user()->hasRole('photographer')) {
+            $user = Auth::user();
+
+            $payments = $user->packagePayments() // gunakan relasi dari user
+                ->latest() // urutkan dari yang terbaru
+                ->paginate(10)
+                ->withQueryString(); // pertahankan query string di pagination
+
+            $pendingCount = $user->packagePayments()->where('payments.status', 'pending')->count();
+            $completedCount = $user->packagePayments()->where('payments.status', 'completed')->count();
+            $processingCount = $user->packagePayments()->where('payments.status', 'processing')->count();
+            $totalRevenue = $user->packagePayments()->where('payments.status', 'completed')->sum('amount');
+
+            return view('payment.index', compact(
+                'payments',
+                'pendingCount',
+                'completedCount',
+                'processingCount',
+                'totalRevenue'
+            ));
         }
-        return view('payment.index', compact('payments'));
+
+
     }
 
     public function create(Package $package)
@@ -71,11 +108,9 @@ class PaymentController extends Controller
 
     public function show(Payment $payment)
     {
-        $this->authorizePayment($payment);
-        
-        $payment->load(['package.features', 'installments', 'proofs']);
-
         if(Auth::user()->hasRole('customer')) {
+            $this->authorizePayment($payment);
+            $payment->load(['package.features', 'installments', 'proofs']);
             return view('customer.payment.detail', compact('payment'));
         }elseif(Auth::user()->hasRole('photographer')) {
             return view('payment.detail', compact('payment'));
@@ -88,7 +123,7 @@ class PaymentController extends Controller
 
         $this->authorizePayment($payment);
 
-        if ($payment->status !== 'pending') {
+        if ($payment->status !== 'pending' && $payment->status !== 'processing') {
             return redirect()->route('customer.payment.show', $payment)->with('error', 'Pembayaran tidak dapat diupload bukti pembayaran.');
         }
 
@@ -185,104 +220,10 @@ class PaymentController extends Controller
         $installment = $payment->installments->where('status', 'pending')->first();
         return view('customer.payment.pay', compact('installment', 'payment'));
     }
-    public function pay(Payment $payment, Request $request)
+    public function pay(Payment $payment)
     {
-        $request->validate([
-            'payment_method'=>'required',
-        ]);
-        $paymentMethod = $request->payment_method;
+        $paymentMethod = $payment->payment_method;
         $installment = $payment->installments->where('status', 'pending')->first();
         return view('customer.payment.uploadProof', compact('payment', 'installment', 'paymentMethod'));
     }
-}
-
-// Admin Controller untuk mengelola pembayaran
-class AdminPaymentController extends Controller
-{
-    public function index()
-    {
-        $payments = Payment::with(['user', 'package', 'proofs'])
-            ->latest()
-            ->paginate(15);
-
-        return view('admin.payments.index', compact('payments'));
-    }
-
-    public function show(Payment $payment)
-    {
-        $payment->load(['user', 'package.features', 'installments', 'proofs']);
-        
-        return view('admin.payments.show', compact('payment'));
-    }
-
-    public function approveProof(Request $request, PaymentProof $proof)
-    {
-        $request->validate([
-            'admin_notes' => 'nullable|string|max:500',
-        ]);
-
-        DB::beginTransaction();
-        
-        try {
-            $proof->update([
-                'status' => 'approved',
-                'admin_notes' => $request->admin_notes,
-            ]);
-
-            // Update installment status
-            $installment = $proof->payment->installments()
-                ->where('status', 'pending')
-                ->orderBy('installment_number')
-                ->first();
-
-            if ($installment) {
-                $installment->update([
-                    'status' => 'paid',
-                    'paid_at' => now(),
-                ]);
-            }
-
-            // Check if all installments are paid
-            $payment = $proof->payment;
-            $allPaid = $payment->installments()
-                ->where('status', '!=', 'paid')
-                ->count() === 0;
-
-            if ($allPaid) {
-                $payment->update([
-                    'status' => 'completed',
-                    'paid_at' => now(),
-                ]);
-            } else {
-                $payment->update(['status' => 'processing']);
-            }
-
-            DB::commit();
-
-            return back()->with('success', 'Bukti pembayaran berhasil disetujui.');
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
-
-    public function rejectProof(Request $request, PaymentProof $proof)
-    {
-        $request->validate([
-            'admin_notes' => 'required|string|max:500',
-        ]);
-
-        $proof->update([
-            'status' => 'rejected',
-            'admin_notes' => $request->admin_notes,
-        ]);
-
-        return back()->with('success', 'Bukti pembayaran berhasil ditolak.');
-    }
-    public function custHist(){
-        return view('payment.cust_history');
-    }
-
-
 }

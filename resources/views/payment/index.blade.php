@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layout.dashboard')
 
 @section('title', 'Daftar Pembayaran')
 
@@ -164,7 +164,7 @@
                     
                     <!-- Actions -->
                     <div class="mt-4 lg:mt-0 lg:ml-6 flex flex-col lg:flex-row gap-2">
-                        <a href="{{ route('customer.payment.show', $payment) }}" 
+                        <a href="{{ route('photographer.payment.show', $payment) }}" 
                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200 text-center text-sm">
                             Detail
                         </a>

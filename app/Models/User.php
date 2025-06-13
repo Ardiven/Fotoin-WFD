@@ -78,4 +78,18 @@ public function payments()
 {
     return $this->hasMany(Payment::class); 
 }
+// User.php
+
+public function packagePayments()
+{
+    return $this->hasManyThrough(
+        \App\Models\Payment::class,
+        \App\Models\Package::class,
+        'user_id',    // foreign key di table packages (mengacu ke users)
+        'package_id', // foreign key di table payments (mengacu ke packages)
+        'id',         // primary key di users
+        'id'          // primary key di packages
+    );
+}
+
 }

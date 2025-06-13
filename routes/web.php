@@ -11,6 +11,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CostumerController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\PotofolioController;
+use App\Http\Controllers\AdminPaymentController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'showlogin')->name('user.login');
@@ -20,9 +21,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register')->name('register');
 });
 Route::middleware(['auth', 'role:photographer'])->group(function () {
-    Route::get('/photographer/overview', function () {
-        return view('photographer.overview');
-    })->name('photographer.overview');
+    Route::get('/photographer/overview', function () {return view('photographer.overview');})->name('photographer.overview');
     Route::get('/photographer/profile', [UserController::class, 'showProfile'])->name('photographer.profile');
     Route::post('/photographer/profile', [UserController::class, 'update'])->name('photographer.profile.update');
     Route::get('/photographer/package', [PackageController::class, 'index'])->name('photographer.packages.index');
@@ -39,6 +38,10 @@ Route::middleware(['auth', 'role:photographer'])->group(function () {
     Route::put('/portfolio/{id}', [PortfolioController::class, 'update'])->name('photographer.portfolio.update');
     Route::delete('/portfolio/{portfolio}', [PortfolioController::class, 'destroy'])->name('photographer.portfolio.destroy');
 
+    Route::get('/photographer/payment', [PaymentController::class, 'index'])->name('photographer.payment.index');
+    Route::get('/photographer/payment/detail/{payment}', [PaymentController::class, 'show'])->name('photographer.payment.show');
+    Route::patch('/photographer/payment/detail-approve/{payment}', [AdminPaymentController::class, 'approveProof'])->name('photographer.payment.approveproof');
+    Route::patch('/photographer/payment/detail-reject/{payment}', [AdminPaymentController::class, 'rejectProof'])->name('photographer.payment.rejectproof');
 
     Route::get('/photographer/packages', function () {
         return view('photographer.packages');

@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layout.dashboard')
 
 @section('title', 'Detail Pembayaran')
 
@@ -159,96 +159,6 @@
             </div>
         </div>
 
-        <!-- Payment Instructions -->
-        @if($payment->status === 'pending' && !$payment->isExpired())
-        <div class="mt-8 bg-blue-50 rounded-lg p-6">
-            <h3 class="font-semibold text-blue-900 mb-4">Instruksi Pembayaran</h3>
-            
-            @switch($payment->payment_method)
-                @case('bank_transfer')
-                    <div class="space-y-4">
-                        <h4 class="font-medium text-blue-800">Transfer ke salah satu rekening berikut:</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="bg-white p-4 rounded-lg border">
-                                <div class="flex items-center mb-2">
-                                    <img src="https://via.placeholder.com/30x20" alt="BCA" class="mr-2">
-                                    <span class="font-medium">Bank BCA</span>
-                                </div>
-                                <p class="text-sm text-gray-600">No. Rekening: 1234567890</p>
-                                <p class="text-sm text-gray-600">a.n. Studio Fotografer</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg border">
-                                <div class="flex items-center mb-2">
-                                    <img src="https://via.placeholder.com/30x20" alt="Mandiri" class="mr-2">
-                                    <span class="font-medium">Bank Mandiri</span>
-                                </div>
-                                <p class="text-sm text-gray-600">No. Rekening: 0987654321</p>
-                                <p class="text-sm text-gray-600">a.n. Studio Fotografer</p>
-                            </div>
-                        </div>
-                    </div>
-                    @break
-                    
-                @case('e_wallet')
-                    <div class="space-y-4">
-                        <h4 class="font-medium text-blue-800">Transfer ke E-Wallet:</h4>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="bg-white p-3 rounded-lg border text-center">
-                                <img src="https://via.placeholder.com/40x40" alt="GoPay" class="mx-auto mb-2">
-                                <p class="text-xs text-gray-600">081234567890</p>
-                            </div>
-                            <div class="bg-white p-3 rounded-lg border text-center">
-                                <img src="https://via.placeholder.com/40x40" alt="OVO" class="mx-auto mb-2">
-                                <p class="text-xs text-gray-600">081234567890</p>
-                            </div>
-                            <div class="bg-white p-3 rounded-lg border text-center">
-                                <img src="https://via.placeholder.com/40x40" alt="DANA" class="mx-auto mb-2">
-                                <p class="text-xs text-gray-600">081234567890</p>
-                            </div>
-                            <div class="bg-white p-3 rounded-lg border text-center">
-                                <img src="https://via.placeholder.com/40x40" alt="ShopeePay" class="mx-auto mb-2">
-                                <p class="text-xs text-gray-600">081234567890</p>
-                            </div>
-                        </div>
-                    </div>
-                    @break
-                    
-                @case('cash')
-                    <div class="space-y-2">
-                        <h4 class="font-medium text-blue-800">Pembayaran Tunai:</h4>
-                        <p class="text-blue-700">Pembayaran akan dilakukan saat bertemu di lokasi pemotretan.</p>
-                        <p class="text-sm text-blue-600">Pastikan untuk membawa uang pas sesuai nominal.</p>
-                    </div>
-                    @break
-            @endswitch
-        </div>
-        @endif
-
-        <!-- Upload Proof Section -->
-        @if($payment->status === 'pending' && $payment->payment_method !== 'cash' && !$payment->isExpired())
-        <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-xl font-semibold mb-4 text-gray-800">Upload Bukti Pembayaran</h3>
-            
-            <form action="{{ route('customer.payment.proof', $payment) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-                @csrf
-                
-                <div>
-                    <label for="proof_file" class="block text-sm font-medium text-gray-700 mb-2">
-                        Pilih File Bukti Pembayaran
-                    </label>
-                    <input type="file" name="proof_file" id="proof_file" accept="image/*" required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 2MB</p>
-                </div>
-                
-                <button type="submit" 
-                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
-                    Upload Bukti Pembayaran
-                </button>
-            </form>
-        </div>
-        @endif
-
         <!-- Payment Proofs -->
         @if($payment->proofs->count() > 0)
         <div class="mt-8 bg-white rounded-lg shadow-md p-6">
@@ -298,10 +208,12 @@
 
         <!-- Actions -->
         <div class="mt-8 flex justify-between items-center">
-            <a href="{{ route('customer.payment.index') }}" 
+            @if($payment->status === 'pending' && !$payment->isExpired())
+            <a href="{{ route('photographer.payment.index') }}" 
                class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 transition duration-200">
                 Kembali ke Daftar Pembayaran
             </a>
+            @endif
             
             @if($payment->status === 'pending' && !$payment->isExpired())
             <form action="{{ route('customer.payment.cancel', $payment) }}" method="POST" class="inline">
@@ -311,6 +223,29 @@
                         onclick="return confirm('Apakah Anda yakin ingin membatalkan pembayaran ini?')"
                         class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition duration-200">
                     Batalkan Pembayaran
+                </button>
+            </form>
+            @endif
+             @if($payment->status === 'processing')
+                <form action="{{route('photographer.payment.rejectproof', $payment)}}" method="POST" class="inline">
+                @csrf
+                @method('PATCH')
+                <button type="submit" 
+                        onclick="return confirm('Apakah Anda yakin ingin menyetujui pembayaran ini?')"
+                        class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition duration-200">
+                    Tolak Pembayaran
+                </button>
+            </form>
+            @endif
+            
+            @if($payment->status === 'processing')
+            <form action="{{route('photographer.payment.approveproof', $payment)}}" method="POST" class="inline">
+                @csrf
+                @method('PATCH')
+                <button type="submit" 
+                        onclick="return confirm('Apakah Anda yakin ingin menyetujui pembayaran ini?')"
+                        class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                    Setujui Pembayaran
                 </button>
             </form>
             @endif
