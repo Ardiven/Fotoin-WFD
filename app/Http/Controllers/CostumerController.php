@@ -201,9 +201,13 @@ class CostumerController extends Controller
         return view('customer.photographer', compact('photographers', 'specialties', 'cities'));
     }
 
-    public function showPayment(Package $package){ {
+    public function showPayment(Package $package){ 
         $photographer = User::find($package->user_id);
         return view('payment.create', compact('package', 'photographer'));
     }
-}
+    public function showBookings(Package $package){
+        $photographer = User::find($package->user_id);
+
+        return view('customer.booking', compact('package', 'photographer'));
+    }
 }

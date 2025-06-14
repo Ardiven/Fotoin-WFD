@@ -6,6 +6,7 @@ use Spatie\Permission\Contracts\Role;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Container\Attributes\Auth;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CostumerController;
@@ -79,8 +80,10 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/customer/payment/pay/{payment}', [PaymentController::class, 'showPay'])->name('customer.payment.pay');
     Route::post('/customer/payment/upload-proof/{payment}', [PaymentController::class, 'uploadProof'])->name('customer.payment.upload.store');
     Route::post('/customer/payment-process/{payment}', [PaymentController::class, 'pay'])->name('customer.payment.process');
+
+    Route::get('/customer/bookings/{package}', [BookingController::class, 'index'])->name('customer.bookings');
+    Route::post('/customer/bookings/{package}', [BookingController::class, 'store'])->name('customer.bookings.store');
+
 });
-
-
 Route::get('/', [CostumerController::class, 'index']);
 

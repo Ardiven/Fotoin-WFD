@@ -296,7 +296,7 @@
                                     <li><i class="fas fa-check text-green-400 mr-2"></i>{{ $feature->name }}</li>
                                     @endforeach
                                 </ul>
-                                <a href="{{route('customer.payment', $package)}}" class="w-full bg-gradient-secondary hover:opacity-90 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300">
+                                <a href="{{route('customer.bookings', $package)}}" class="w-full bg-gradient-secondary hover:opacity-90 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300">
                                     Select Package
                                 </a>
                             </div>
