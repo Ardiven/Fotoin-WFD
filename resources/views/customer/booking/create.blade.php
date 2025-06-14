@@ -81,7 +81,7 @@
                             @csrf
                             
                             <!-- Hidden fields for photographer and package -->
-                            <input type="hidden" name="photographer_id" value="{{ $photographer->id }}">
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                             <input type="hidden" name="package_id" value="{{ $package->id }}">
                             
                             <!-- Date Selection -->
@@ -102,18 +102,21 @@
                                 <label for="time" class="block text-white font-medium mb-2">
                                     <i class="fas fa-clock mr-2"></i>Select Time
                                 </label>
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                    <button type="button" class="time-slot px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all duration-300" data-time="09:00">09:00</button>
-                                    <button type="button" class="time-slot px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all duration-300" data-time="10:00">10:00</button>
-                                    <button type="button" class="time-slot px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all duration-300" data-time="11:00">11:00</button>
-                                    <button type="button" class="time-slot px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all duration-300" data-time="13:00">13:00</button>
-                                    <button type="button" class="time-slot px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all duration-300" data-time="14:00">14:00</button>
-                                    <button type="button" class="time-slot px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all duration-300" data-time="15:00">15:00</button>
-                                    <button type="button" class="time-slot px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all duration-300" data-time="16:00">16:00</button>
-                                    <button type="button" class="time-slot px-4 py-2 rounded-lg border border-white/20 text-white hover:bg-white/10 transition-all duration-300" data-time="17:00">17:00</button>
-                                </div>
-                                <input type="hidden" id="selectedTime" name="time" required>
+
+                                <select id="time" name="time" required
+                                        class="w-full px-4 py-2 rounded-lg border border-white/20 bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="" disabled selected>Select a time</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="17:00">17:00</option>
+                                </select>
                             </div>
+
                             <!-- Location Type -->
                             <div>
                                 <label for="locationType" class="block text-white font-medium mb-2">
@@ -189,7 +192,7 @@
 
                             <!-- Submit Button -->
                             <div class="pt-4">
-                                <button type="submit" id="submitBtn" class="w-full bg-gradient-secondary hover:opacity-90 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 text-lg">
+                                <button type="submit" form="bookingForm" class="w-full bg-gradient-secondary hover:opacity-90 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 text-lg">
                                     <i class="fas fa-credit-card mr-2"></i>
                                     Proceed to Payment
                                 </button>
@@ -284,38 +287,6 @@
             const packageId = urlParams.get('package');
             const photographerId = urlParams.get('photographer');
 
-            // Sample data - replace with actual data from your backend
-            const packages = {
-                '1': {
-                    name: 'Basic Session',
-                    price: 'Rp 500.000',
-                    description: 'Basic portrait session with 5 edited photos'
-                },
-                '2': {
-                    name: 'Premium Session', 
-                    price: 'Rp 1.200.000',
-                    description: 'Professional portrait session with 15 edited photos'
-                },
-                '3': {
-                    name: 'Wedding Package',
-                    price: 'Rp 3.500.000', 
-                    description: 'Complete wedding coverage with full gallery'
-                }
-            };
-
-            const photographers = {
-                '1': {
-                    name: 'Alex Johnson',
-                    rating: '4.9',
-                    reviews: '127'
-                },
-                '2': {
-                    name: 'Jane Smith',
-                    rating: '4.8', 
-                    reviews: '89'
-                }
-            };
-
             // Populate package info if available
             if (packageId && packages[packageId]) {
                 document.getElementById('packageName').textContent = packages[packageId].name;
@@ -381,22 +352,7 @@
                 }
 
                 // Simulate form submission
-                const submitButton = this.querySelector('button[type="submit"]');
-                const originalText = submitButton.innerHTML;
-                
-                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
-                submitButton.disabled = true;
-                
-                setTimeout(() => {
-                    alert('Booking submitted successfully! Redirecting to payment...');
-                    // Here you would redirect to payment page
-                    // window.location.href = '/payment';
-                    
-                    // Reset button for demo
-                    submitButton.innerHTML = originalText;
-                    submitButton.disabled = false;
-                }, 2000);
-            });
+               
 
             // Set minimum date to today
             const today = new Date().toISOString().split('T')[0];

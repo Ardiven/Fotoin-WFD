@@ -13,13 +13,14 @@ class BookingController extends Controller
 {
     public function index(Package $package){
         $photographer = User::find($package->user_id);
-        return view('customer.booking', compact('package', 'photographer'));
+        return view('customer.booking.create', compact('package', 'photographer'));
     }
     public function store(Request $request)
     {
+         $package = Package::findOrFail($request->package_id);
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'photographer_id' => 'required|exists:photographers,id',
+            'user_id' => 'required|exists:users,id',
             'package_id' => 'required|exists:packages,id',
             'date' => 'required|date|after_or_equal:today',
             'time' => 'required|string',
@@ -28,11 +29,6 @@ class BookingController extends Controller
             'client_name' => 'required|string|max:100',
             'client_phone' => 'required|string|max:20',
             'notes' => 'nullable|string|max:1000',
-        ], [
-            'date.after_or_equal' => 'Tanggal booking tidak boleh di masa lalu',
-            'photographer_id.exists' => 'Photographer tidak ditemukan',
-            'package_id.exists' => 'Package tidak ditemukan',
-            'location_type.in' => 'Tipe lokasi tidak valid',
         ]);
 
         if ($validator->fails()) {
@@ -46,11 +42,13 @@ class BookingController extends Controller
             DB::beginTransaction();
             
             // Cek availability
-            $existingBooking = Booking::where('photographer_id', $request->photographer_id)
-                ->where('date', $request->date)
-                ->where('time', $request->time)
-                ->where('status', '!=', 'cancelled')
-                ->first();
+            $existingBooking = Booking::whereHas('package', function($query) use ($package) {
+            $query->where('user_id', $package->user_id);
+            })
+            ->where('date', $request->date)
+            ->where('time', $request->time)
+            ->where('status', '!=', 'cancelled')
+            ->first();
                 
             if ($existingBooking) {
                 return response()->json([
@@ -60,11 +58,11 @@ class BookingController extends Controller
             }
             
             // Get package price
-            $package = Package::findOrFail($request->package_id);
+            
             
             // Create booking
             $booking = Booking::create([
-                'photographer_id' => $request->photographer_id,
+                'user_id' => $request->user_id,
                 'package_id' => $request->package_id,
                 'date' => $request->date,
                 'time' => $request->time,
@@ -80,22 +78,15 @@ class BookingController extends Controller
             
             DB::commit();
             
-            return response()->json([
-                'success' => true,
-                'message' => 'Booking berhasil dibuat!',
-                'booking' => $booking,
-                'redirect_url' => route('payment.create', ['booking' => $booking->id])
-            ]);
+            return redirect()->route('customer.payment', $package)->with('success', 'Booking berhasil dibuat.');
             
         } catch (\Exception $e) {
             DB::rollback();
             
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan. Silakan coba lagi.'
-            ], 500);
+            return redirect()->route('customer.booking.create', $package)->with('error', $e);
         }
     }
+    
     
     /**
      * Generate unique booking number
