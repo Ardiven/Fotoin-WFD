@@ -293,7 +293,7 @@
                                 </button>
                                 
                                 <!-- Reject Button -->
-                                <button onclick="rejectBooking({{ $booking->id }})" 
+                                <button onclick="rejectBooking({{ $booking->id }}, '{{ route('photographer.booking.reject', $booking->id) }}')"
                                         class="px-4 py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors text-sm font-medium">
                                     <i class="fas fa-times mr-1"></i> Reject
                                 </button>
@@ -498,7 +498,7 @@ function rejectBooking(bookingId) {
     const modal = document.getElementById('rejectModal');
     const form = document.getElementById('rejectForm');
     
-    form.action = `/photographer/bookings/${bookingId}/reject`;
+    form.action = `/photographer/bookings-reject/${bookingId}`;
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 }

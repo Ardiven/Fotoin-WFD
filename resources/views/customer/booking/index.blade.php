@@ -262,17 +262,6 @@
                                         class="px-4 py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors text-sm font-medium">
                                     <i class="fas fa-times mr-1"></i> Cancel
                                 </button>
-                                
-                                  @if(!$booking->payment || $booking->payment->status === 'pending')
-                                    <!-- Pay Now Button -->
-                                    <form action="{{ route('customer.booking.pay', $booking) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button type="submit" 
-                                                class="w-full px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium">
-                                            <i class="fas fa-credit-card mr-1"></i> Pay Now
-                                        </button>
-                                    </form>
-                                @endif
 
                             @endif
 
@@ -284,7 +273,7 @@
                                 </a>
                             @endif
                             
-                            @if(!$booking->payment || $booking->payment->status === 'pending')
+                            @if(!$booking->payment || $booking->payment->status === 'pending' && !$booking->status === 'cancelled')
                                 <!-- Pay Now Button -->
                                 <form action="{{ route('customer.booking.pay', $booking) }}" method="POST" class="inline">
                                     @csrf
@@ -312,7 +301,7 @@
 
                             @if($booking->status === 'cancelled')
                                 <!-- Book Again -->
-                                <a href="#" 
+                                <a href="{{route('customer.photographers.show', $booking->package->user)}}" 
                                    class="px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-redo mr-1"></i> Book Again
                                 </a>

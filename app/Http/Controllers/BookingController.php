@@ -142,6 +142,26 @@ class BookingController extends Controller
                 'message' => 'Data berhasil dikirim!',
             ]);
     }
+    public function reject(Request $request, $id){
+        
+              $booking = Booking::findOrFail($id);
+            // Validasi input optional dari form
+            $request->validate([
+                'confirmation_message' => 'nullable|string|max:1000',
+            ]);
+
+            // Update status booking jadi confirmed
+            $booking->status = 'cancelled';
+            $booking->save();
+
+            // (Opsional) Kirim notifikasi ke client
+            // Notification::route(...)->notify(new BookingConfirmed(...));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dikirim!',
+            ]);
+    }
 
 
     public function create(Package $package){

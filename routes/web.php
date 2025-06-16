@@ -48,6 +48,7 @@ Route::middleware(['auth', 'role:photographer'])->group(function () {
     Route::get('/photographer/bookings', [BookingController::class, 'index'])->name('photographer.bookings.index');
     Route::patch('/photographer/bookings-confirm/{id}', [BookingController::class, 'confirm'])->name('photographer.booking.confirm');
     Route::patch('/photographer/bookings-complete/{id}', [BookingController::class, 'complete'])->name('photographer.booking.complete');
+        Route::patch('/photographer/bookings-reject/{id}', [BookingController::class, 'reject'])->name('photographer.booking.reject');
 
     Route::get('/photographer/packages', function () {
         return view('photographer.packages');
