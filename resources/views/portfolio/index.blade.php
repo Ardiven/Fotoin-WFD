@@ -258,7 +258,7 @@
         @endif
 
         <!-- Specialty Filter Pills -->
-        <div class="content-glass border border-white/20 rounded-lg p-6">
+        {{-- <div class="content-glass border border-white/20 rounded-lg p-6">
             <h3 class="text-white text-lg font-semibold mb-4">Filter by Specialty</h3>
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('photographer.portfolio.index') }}" 
@@ -273,7 +273,7 @@
                     </a>
                 @endforeach
             </div>
-        </div>
+        </div> --}}
 
         <!-- Search and Advanced Filters -->
         <div class="content-glass border border-white/20 rounded-lg p-6">
@@ -287,7 +287,7 @@
                                    name="search" 
                                    value="{{ request('search') }}"
                                    placeholder="Search by title or description..."
-                                   class="w-full px-4 py-3 pl-10 form-input rounded-lg">
+                                   class="w-full px-4 py-3 pl-10 form-input text-white bg-white/10 border border-white/30 rounded-lg">
                             <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         </div>
                     </div>
@@ -295,7 +295,7 @@
                     <!-- Specialty Filter -->
                     <div>
                         <label class="block text-white text-sm font-medium mb-2">Specialty</label>
-                        <select name="specialty_id" class="w-full px-4 py-3 form-input rounded-lg">
+                        <select name="specialty_id" class="text-white bg-white/10 border border-white/30 w-full px-4 py-3 form-input rounded-lg">
                             <option value="">All Specialties</option>
                             @foreach($specialties as $specialty)
                                 <option value="{{ $specialty->id }}" {{ request('specialty_id') == $specialty->id ? 'selected' : '' }}>
@@ -308,7 +308,7 @@
                     <!-- Sort Options -->
                     <div>
                         <label class="block text-white text-sm font-medium mb-2">Sort By</label>
-                        <select name="sort" class="w-full px-4 py-3 form-input rounded-lg">
+                        <select name="sort" class="w-full px-4 py-3 form-input rounded-lg text-white bg-white/10 border border-white/30">
                             <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
                             <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
                             <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>Title A-Z</option>

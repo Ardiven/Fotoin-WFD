@@ -74,18 +74,18 @@
                         <input type="text" 
                                name="search"
                                value="{{ request('search') }}"
-                               class="w-full pl-10 pr-4 py-3 form-input rounded-lg"
+                               class="w-full pl-10 pr-4 py-3 form-input rounded-lg bg-white/10 border border-white/30"
                                placeholder="Search packages...">
                        
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <select name="status" class="px-4 py-3 form-input rounded-lg">
+                    <select name="status" class="px-4 py-3 form-input rounded-lg bg-white/10 border border-white/30">
                         <option value="">All Status</option>
                         <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                     </select>
-                    <select name="sort" class="px-4 py-3 form-input rounded-lg">
+                    <select name="sort" class="px-4 py-3 form-input rounded-lg bg-white/10 border border-white/30">
                         <option value="name" {{ request('sort') === 'name' ? 'selected' : '' }}>Sort by Name</option>
                         <option value="price" {{ request('sort') === 'price' ? 'selected' : '' }}>Sort by Price</option>
                         <option value="created" {{ request('sort') === 'created' ? 'selected' : '' }}>Sort by Date</option>

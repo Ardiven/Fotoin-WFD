@@ -166,7 +166,7 @@
                                    id="name"
                                    name="name"
                                    value="{{ old('full_name', Auth::user()->name ?? '') }}"
-                                   class="w-full px-4 py-3 form-input rounded-lg @error('full_name') border-red-500/50 @enderror"
+                                   class="w-full text-white px-4 py-3 form-input rounded-lg bg-white/10 border border-white/30 @error('full_name') border-red-500/50 @enderror"
                                    placeholder="{{ old('full_name', $photographer->name ?? '') }}"
                                    required>
                             @error('full_name')
@@ -181,7 +181,7 @@
                                    id="email"
                                    name="email"
                                    value="{{ old('email', Auth::user()->email ?? '') }}"
-                                   class="w-full px-4 py-3 form-input rounded-lg @error('email') border-red-500/50 @enderror"
+                                   class="w-full px-4 py-3 text-white form-input rounded-lg bg-white/10 border border-white/30 @error('email') border-red-500/50 @enderror"
                                    placeholder="{{ old('email', Auth::user()->email ?? '') }}"
                                    required>
                             @error('email')
@@ -196,7 +196,7 @@
                                    id="phone"
                                    name="phone"
                                    value="{{ old('phone', Auth::user()->photographerProfile->phone ?? '') }}"
-                                   class="w-full px-4 py-3 form-input rounded-lg @error('phone') border-red-500/50 @enderror"
+                                   class="w-full px-4 py-3 form-input text-white rounded-lg bg-white/10 border border-white/30 @error('phone') border-red-500/50 @enderror"
                                    placeholder="08123456789"
                                    required>
                             @error('phone')
@@ -211,7 +211,7 @@
                                    id="whatsapp"
                                    name="whatsapp"
                                    value="{{ old('whatsapp', Auth::user()->photographerProfile->whatsapp ?? '') }}"
-                                   class="w-full px-4 py-3 form-input rounded-lg @error('whatsapp') border-red-500/50 @enderror"
+                                   class="w-full px-4 py-3 form-input text-white rounded-lg bg-white/10 border border-white/30 @error('whatsapp') border-red-500/50 @enderror"
                                    placeholder="08123456789 (jika berbeda)">
                             @error('whatsapp')
                                 <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
@@ -224,11 +224,11 @@
                         <label for="bio" class="block text-white text-sm font-medium mb-2">Bio/Deskripsi Singkat *</label>
                         <textarea id="bio"
                                   name="bio"
-                                  class="w-full px-4 py-3 form-input rounded-lg h-24 resize-none @error('bio') border-red-500/50 @enderror"
+                                  class="w-full px-4 py-3 form-input text-white rounded-lg h-24 bg-white/10 border border-white/30 resize-none @error('bio') border-red-500/50 @enderror"
                                   placeholder="{{ old('bio', Auth::user()->photographerProfile->bio ?? '') }}"
                                   maxlength="200"
                                   x-model="bioText"
-                                  required>{{ old('bio', Auth::user()->photographerProfile->bio ?? '') }}</textarea>
+                                  required>{{ e(old('bio', Auth::user()->photographerProfile->bio ?? '')) }}</textarea>
                         <div class="flex justify-between items-center mt-1">
                             <div>
                                 @error('bio')
@@ -410,7 +410,7 @@
                                 <select id="experience_years"
                                         name="experience_years" 
                                         required
-                                        class="w-full px-4 py-3 form-input rounded-lg appearance-none cursor-pointer @error('experience_years') border-red-500/50 @enderror">
+                                        class="bg-white/10 border border-white/30 w-full px-4 py-3 form-input rounded-lg appearance-none cursor-pointer @error('experience_years') border-red-500/50 @enderror">
                                     <option value="">Pilih Pengalaman</option>
                                     <option value="0-1" {{ old('experience_years', Auth::user()->photographerProfile->experience_years ?? '') == '0-1' ? 'selected' : '' }}>Kurang dari 1 tahun</option>
                                     <option value="1-2" {{ old('experience_years', Auth::user()->photographerProfile->experience_years ?? '') == '1-2' ? 'selected' : '' }}>1-2 tahun</option>
