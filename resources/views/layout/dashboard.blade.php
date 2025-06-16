@@ -114,8 +114,10 @@
             background: rgba(255, 255, 255, 0.5);
         }
     </style>
+    @stack('styles')
 </head>
 <body class="font-sans antialiased">
+
     <div x-data="dashboardApp()" class="dashboard-container">
         <!-- Header -->
         <header class="glass-effect border-b border-white/20 sticky top-0 z-50 flex-shrink-0">
@@ -203,14 +205,6 @@
             <div :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" 
                 class="fixed lg:relative lg:translate-x-0 w-64 sidebar-container sidebar-glass border-r border-white/20 transition-transform z-40">
                 
-                <!-- Logo Section -->
-                <div class="flex items-center px-6 py-4 border-b border-white/20 flex-shrink-0">
-                    <div class="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-camera text-white"></i>
-                    </div>
-                    <span class="text-white text-xl font-bold">FotoIn</span>
-                </div>
-                
                 <!-- Navigation -->
                 <nav class="sidebar-nav px-4 py-6">
                     <ul class="space-y-2">
@@ -233,7 +227,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" 
+                            <a href="{{route('photographer.bookings.index')}}" 
                             class="w-full flex items-center px-4 py-3 rounded-lg transition-all text-white/80 hover:text-white hover:bg-white/10">
                                 <i class="fas fa-calendar mr-3"></i>Bookings
                             </a>
@@ -334,5 +328,6 @@
             }
         }
     </script>
+    @stack('scripts')
 </body>
 </html>

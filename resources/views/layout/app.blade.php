@@ -56,7 +56,6 @@
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="{{ url('/') }}" class="text-white/80 hover:text-white transition-colors font-semibold">Home</a>
                     <a href="{{ route('customer.photographers')}}" class="text-white/80 hover:text-white transition-colors">Photographers</a>
-                    {{-- <a href="{{ route('customer.payment.index') }}" class="text-white/80 hover:text-white transition-colors">Payments</a> --}}
                     <a href="{{ route('chat') }}" class="text-white/80 hover:text-white transition-colors">Contact</a>
                     
                     @guest
@@ -95,7 +94,7 @@
                                     <i class="fas fa-tachometer-alt mr-3"></i>
                                     Dashboard
                                 </a>
-                                <a href="{{ url('/bookings') }}" class="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                                <a href="{{ route('customer.bookings.index') }}" class="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 transition-colors">
                                     <i class="fas fa-calendar mr-3"></i>
                                     My Bookings
                                 </a>

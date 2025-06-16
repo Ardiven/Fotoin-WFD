@@ -25,23 +25,23 @@
         transform: translateY(-2px);
     }
     .status-pending {
-        background: rgba(255, 193, 7, 0.2);
-        color: #ffc107;
+        background: rgba(255, 193, 7, 0.66);
+        color: white;
         border: 1px solid rgba(255, 193, 7, 0.3);
     }
     .status-confirmed {
-        background: rgba(40, 167, 69, 0.2);
-        color: #28a745;
+        background: rgba(37, 214, 78, 0.659);
+       color: white;
         border: 1px solid rgba(40, 167, 69, 0.3);
     }
     .status-completed {
-        background: rgba(23, 162, 184, 0.2);
-        color: #17a2b8;
+        background: rgba(23, 163, 184, 0.647);
+        color: white;
         border: 1px solid rgba(23, 162, 184, 0.3);
     }
     .status-cancelled {
-        background: rgba(220, 53, 69, 0.2);
-        color: #dc3545;
+        background: rgba(220, 53, 70, 0.667);
+        color: white;
         border: 1px solid rgba(220, 53, 69, 0.3);
     }
     .filter-btn {
@@ -82,6 +82,27 @@
         border-radius: 0.75rem;
         margin-left: 0.5rem;
     }
+    .payment-status-pending {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .payment-status-processing {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .payment-status-completed {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .payment-status-failed {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
 </style>
 @endpush
 
@@ -93,7 +114,7 @@
             <h1 class="text-4xl font-bold text-white mb-2">My Bookings</h1>
             <p class="text-white/80">Manage and track all your photography sessions</p>
             <div class="mt-4">
-                <span class="text-white/60">Total: {{ $statusCounts['all'] }} bookings</span>
+                <span class="text-white/60">Total: {{ $bookings->total() }} bookings</span>
             </div>
         </div>
 
@@ -103,37 +124,32 @@
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <!-- Status Filters -->
                     <div class="flex flex-wrap gap-2">
-                        <button type="button" class="filter-btn {{ $status === 'all' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="all">
+                        <button type="button" class="filter-btn {{ request('status', 'all') === 'all' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="all">
                             All Bookings
-                            <span class="booking-count">{{ $statusCounts['all'] }}</span>
                         </button>
-                        <button type="button" class="filter-btn {{ $status === 'pending' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="pending">
+                        <button type="button" class="filter-btn {{ request('status') === 'pending' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="pending">
                             Pending
-                            <span class="booking-count">{{ $statusCounts['pending'] }}</span>
                         </button>
-                        <button type="button" class="filter-btn {{ $status === 'confirmed' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="confirmed">
+                        <button type="button" class="filter-btn {{ request('status') === 'confirmed' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="confirmed">
                             Confirmed
-                            <span class="booking-count">{{ $statusCounts['confirmed'] }}</span>
                         </button>
-                        <button type="button" class="filter-btn {{ $status === 'completed' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="completed">
+                        <button type="button" class="filter-btn {{ request('status') === 'completed' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="completed">
                             Completed
-                            <span class="booking-count">{{ $statusCounts['completed'] }}</span>
                         </button>
-                        <button type="button" class="filter-btn {{ $status === 'cancelled' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="cancelled">
+                        <button type="button" class="filter-btn {{ request('status') === 'cancelled' ? 'active' : '' }} px-4 py-2 rounded-lg text-sm font-medium" data-status="cancelled">
                             Cancelled
-                            <span class="booking-count">{{ $statusCounts['cancelled'] }}</span>
                         </button>
                     </div>
 
                     <!-- Search -->
                     <div class="relative">
-                        <input type="text" name="search" id="searchInput" value="{{ $search }}" 
-                               placeholder="Search by photographer or location..." 
+                        <input type="text" name="search" id="searchInput" value="{{ request('search') }}" 
+                               placeholder="Search by package name or photographer..." 
                                class="search-input pl-10 pr-4 py-2 rounded-lg w-full lg:w-80">
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60"></i>
                     </div>
                 </div>
-                <input type="hidden" name="status" id="statusInput" value="{{ $status }}">
+                <input type="hidden" name="status" id="statusInput" value="{{ request('status', 'all') }}">
             </form>
         </div>
 
@@ -141,90 +157,150 @@
         <div id="bookingsList" class="space-y-6">
             @forelse($bookings as $booking)
                 <div class="booking-card rounded-2xl p-6" data-status="{{ $booking->status }}">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div class="flex items-start gap-4">
+                    <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                        <div class="flex items-start gap-4 flex-1">
                             <!-- Photographer Avatar -->
-                            <img src="{{ $booking->photographer->avatar ?? 'https://res.cloudinary.com/djv4xa6wu/image/upload/v1735722163/AbhirajK/Abhirajk%20mykare.webp' }}" 
-                                 alt="{{ $booking->photographer->name }}" 
-                                 class="w-16 h-16 rounded-full border-2 border-white/30 object-cover">
+                            <img src="{{ $booking->package->user->profile_photo ?? 'https://ui-avatars.com/api/?name=' . urlencode($booking->package->user->name) . '&background=667eea&color=fff&size=128' }}" 
+                                 alt="{{ $booking->package->user->name }}" 
+                                 class="w-16 h-16 rounded-full border-2 border-white/30 object-cover flex-shrink-0">
                             
                             <!-- Booking Details -->
-                            <div class="flex-1">
-                                <div class="flex items-center gap-3 mb-2">
-                                    <h3 class="text-white font-bold text-lg">{{ $booking->booking_type }}</h3>
-                                    <span class="{{ $booking->status_color }} px-3 py-1 rounded-full text-xs font-medium">
-                                        {{ $booking->status_label }}
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center flex-wrap gap-3 mb-2">
+                                    <h3 class="text-white font-bold text-lg">{{ $booking->package->name }}</h3>
+                                    <span class="status-{{ $booking->status }} px-3 py-1 rounded-full text-xs font-medium">
+                                        {{ ucfirst($booking->status) }}
                                     </span>
+                                    @if($booking->payment)
+                                    <span class="payment-status-{{ $booking->payment->status }} px-3 py-1 rounded-full text-xs font-medium">
+                                        Payment: {{ ucfirst($booking->payment->status) }}
+                                    </span>
+                                    @else
+                                    <span class="payment-status-{{ 'pending' }} px-3 py-1 rounded-full text-xs font-medium">
+                                        Payment: {{ 'pending' }}
+                                    </span>
+                                    @endif
                                 </div>
-                                <p class="text-white/80 font-medium mb-1">
-                                    Photographer: {{ $booking->photographer->name }}
+                                
+                                <!-- Booking Number -->
+                                <p class="text-white/60 text-sm font-mono mb-2">
+                                    #{{ $booking->booking_number }}
                                 </p>
-                                <div class="flex flex-wrap gap-4 text-sm text-white/70">
-                                    <div class="flex items-center gap-1">
-                                        <i class="fas fa-calendar-alt"></i>
-                                        <span>{{ $booking->formatted_date }}</span>
+                                
+                                <!-- Photographer Info -->
+                                <p class="text-white/80 font-medium mb-3">
+                                    Photographer: {{ $booking->package->user->name }}
+                                </p>
+                                
+                                <!-- Booking Details Grid -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-white/70 mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-calendar-alt w-4"></i>
+                                        <span>{{ \Carbon\Carbon::parse($booking->date)->format('M d, Y') }}</span>
                                     </div>
-                                    <div class="flex items-center gap-1">
-                                        <i class="fas fa-clock"></i>
-                                        <span>{{ $booking->formatted_time }}</span>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-clock w-4"></i>
+                                        <span>{{ \Carbon\Carbon::parse($booking->time)->format('g:i A') }}</span>
                                     </div>
-                                    <div class="flex items-center gap-1">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span>{{ $booking->location }}</span>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-map-marker-alt w-4"></i>
+                                        <span>{{ ucfirst($booking->location_type) }} - {{ $booking->location }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-clock w-4"></i>
+                                        <span>{{ $booking->package->duration }} hours</span>
                                     </div>
                                 </div>
-                                <div class="mt-2">
-                                    <span class="text-white font-bold text-lg">{{ $booking->formatted_price }}</span>
+                                
+                                <!-- Client Info -->
+                                <div class="text-sm text-white/70 mb-3">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <i class="fas fa-user w-4"></i>
+                                        <span>{{ $booking->client_name }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-phone w-4"></i>
+                                        <span>{{ $booking->client_phone }}</span>
+                                    </div>
                                 </div>
+                                
+                                <!-- Price -->
+                                <div class="mb-3">
+                                    <span class="text-white font-bold text-xl">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</span>
+                                </div>
+                                
+                                <!-- Notes -->
                                 @if($booking->notes)
-                                    <div class="mt-2">
-                                        <p class="text-white/60 text-sm">Notes: {{ $booking->notes }}</p>
+                                    <div class="mb-3">
+                                        <p class="text-white/60 text-sm">
+                                            <i class="fas fa-sticky-note mr-1"></i>
+                                            Notes: {{ $booking->notes }}
+                                        </p>
+                                    </div>
+                                @endif
+                                
+                                <!-- Package Description -->
+                                @if($booking->package->description)
+                                    <div class="text-white/60 text-sm">
+                                        <p class="line-clamp-2">{{ $booking->package->description }}</p>
                                     </div>
                                 @endif
                             </div>
                         </div>
 
                         <!-- Actions -->
-                        <div class="flex flex-col sm:flex-row gap-2">
+                        <div class="flex flex-col sm:flex-row gap-2 lg:flex-col lg:w-48">
                             <!-- View Details (always available) -->
-                            <a href="{{ route('bookings.show', $booking) }}" 
+                            <a href="{{ route('bookings.show', $booking->id) }}" 
                                class="px-4 py-2 bg-gradient-secondary text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center">
                                 <i class="fas fa-eye mr-1"></i> View Details
                             </a>
 
-                            @if($booking->canBeCancelled())
+                            @if($booking->status === 'pending')
                                 <!-- Cancel Button -->
                                 <button onclick="cancelBooking({{ $booking->id }})" 
                                         class="px-4 py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors text-sm font-medium">
                                     <i class="fas fa-times mr-1"></i> Cancel
                                 </button>
-                            @elseif($booking->canMessage())
-                                <!-- Message Button -->
-                                <a href="{{ route('messages.create', ['user' => $booking->photographer]) }}" 
+                                
+                                  @if(!$booking->payment || $booking->payment->status === 'pending')
+                                    <!-- Pay Now Button -->
+                                    <form action="{{ route('customer.booking.pay', $booking) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="w-full px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium">
+                                            <i class="fas fa-credit-card mr-1"></i> Pay Now
+                                        </button>
+                                    </form>
+                                @endif
+
+                            @endif
+
+                            @if(in_array($booking->status, ['confirmed', 'completed']))
+                                <!-- Message Photographer -->
+                                <a href="#" 
                                    class="px-4 py-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-message mr-1"></i> Message
                                 </a>
                             @endif
 
-                            @if($booking->canViewPhotos())
+                            @if($booking->status === 'completed')
                                 <!-- View Photos -->
-                                <a href="{{ route('bookings.photos', $booking) }}" 
-                                   class="px-4 py-2 bg-gradient-secondary text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center">
+                                <a href="#" 
+                                   class="px-4 py-2 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-images mr-1"></i> View Photos
                                 </a>
-                            @endif
-
-                            @if($booking->canBeReviewed())
-                                <!-- Review Button -->
-                                <a href="{{ route('bookings.review', $booking) }}" 
+                                
+                                <!-- Leave Review -->
+                                <a href="#" 
                                    class="px-4 py-2 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm font-medium text-center">
-                                    <i class="fas fa-star mr-1"></i> Review
+                                    <i class="fas fa-star mr-1"></i> Leave Review
                                 </a>
                             @endif
 
                             @if($booking->status === 'cancelled')
                                 <!-- Book Again -->
-                                <a href="{{ route('bookings.book-again', $booking) }}" 
+                                <a href="#" 
                                    class="px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-redo mr-1"></i> Book Again
                                 </a>
@@ -238,13 +314,13 @@
                     <i class="fas fa-camera text-6xl mb-4 text-white/40"></i>
                     <h3 class="text-xl font-bold text-white mb-2">No bookings found</h3>
                     <p class="text-white/60 mb-6">
-                        @if($search || $status !== 'all')
+                        @if(request('search') || request('status', 'all') !== 'all')
                             No bookings match your search criteria. Try adjusting your filters.
                         @else
                             You haven't made any bookings yet. Start exploring our talented photographers!
                         @endif
                     </p>
-                    <a href="{{ route('photographers.index') }}" 
+                    <a href="{{ route('customer.photographers') }}" 
                        class="inline-block px-6 py-3 bg-gradient-secondary text-white rounded-lg hover:opacity-90 transition-opacity font-medium">
                         <i class="fas fa-search mr-2"></i>Find Photographers
                     </a>
@@ -256,7 +332,7 @@
         @if($bookings->hasPages())
             <div class="mt-8 flex justify-center">
                 <div class="glass-effect rounded-lg border border-white/20 p-4">
-                    {{ $bookings->appends(request()->query())->links('pagination.custom') }}
+                    {{ $bookings->appends(request()->query())->links() }}
                 </div>
             </div>
         @endif
@@ -274,7 +350,7 @@
             @method('PATCH')
             <div class="mb-4">
                 <label class="block text-white/80 text-sm font-medium mb-2">Reason for cancellation (optional)</label>
-                <textarea name="reason" rows="3" class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-white/40"></textarea>
+                <textarea name="cancellation_reason" rows="3" class="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-white/40" placeholder="Please tell us why you're cancelling..."></textarea>
             </div>
             
             <div class="flex gap-3 justify-end">

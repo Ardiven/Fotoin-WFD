@@ -73,6 +73,13 @@ class Booking extends Model
         return $this->belongsTo(Package::class);
     }
 
+
+    public function payment()
+    {
+        return $this->hasOne(\App\Models\Payment::class, 'booking_id', 'id');
+    }
+
+
     /**
      * Get formatted date
      */

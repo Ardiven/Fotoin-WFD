@@ -26,7 +26,7 @@ Route::middleware(['auth', 'role:photographer'])->group(function () {
     Route::get('/photographer/profile', [UserController::class, 'showProfile'])->name('photographer.profile');
     Route::post('/photographer/profile', [UserController::class, 'update'])->name('photographer.profile.update');
     Route::get('/photographer/package', [PackageController::class, 'index'])->name('photographer.packages.index');
-    Route::post('/photographer/package', [PackageController::class, 'update'])->name('photographer.packages.update');
+    // Route::post('/photographer/package', [PackageController::class, 'update'])->name('photographer.packages.update');
     Route::get('/photographer/package/create', [PackageController::class, 'create'])->name('photographer.packages.create');
     Route::post('/photographer/package/create', [PackageController::class, 'store'])->name('photographer.packages.store');
     Route::get('/photographer/package/{package}/edit', [PackageController::class, 'edit'])->name('photographer.packages.edit');
@@ -44,12 +44,12 @@ Route::middleware(['auth', 'role:photographer'])->group(function () {
     Route::patch('/photographer/payment/detail-approve/{payment}', [AdminPaymentController::class, 'approveProof'])->name('photographer.payment.approveproof');
     Route::patch('/photographer/payment/detail-reject/{payment}', [AdminPaymentController::class, 'rejectProof'])->name('photographer.payment.rejectproof');
 
+    Route::get('/photographer/bookings', [BookingController::class, 'index'])->name('photographer.bookings.index');
+    Route::patch('/photographer/bookings-confirm/{id}', [BookingController::class, 'confirm'])->name('photographer.booking.confirm');
+
     Route::get('/photographer/packages', function () {
         return view('photographer.packages');
     })->name('photographer.packages');
-    Route::get('/photographer/bookings', function () {
-        return view('photographer.bookings');
-    })->name('photographer.bookings');
     Route::get('/photographer/chat', function () {
         return view('photographer.chat');
     })->name('photographer.chat');
@@ -71,6 +71,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         return view('customer.chat');
     })->name('chat');
     Route::get('/customer/photographers', [CostumerController::class, 'showPhotographers'])->name('customer.photographers');
+
     Route::get('/customer/payment/{booking}', [PaymentController::class, 'create'])->name('customer.payment');
     Route::post('/customer/payment/{booking}', [PaymentController::class, 'store'])->name('customer.payment.store');
     Route::get('/customer/payment/detail/{payment}', [PaymentController::class, 'show'])->name('customer.payment.show');
@@ -81,8 +82,14 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::post('/customer/payment/upload-proof/{payment}', [PaymentController::class, 'uploadProof'])->name('customer.payment.upload.store');
     Route::post('/customer/payment-process/{payment}', [PaymentController::class, 'pay'])->name('customer.payment.process');
 
-    Route::get('/customer/bookings/{package}', [BookingController::class, 'index'])->name('customer.bookings');
+    Route::get('/customer/bookings/{package}', [BookingController::class, 'create'])->name('customer.bookings');
     Route::post('/customer/bookings/{package}', [BookingController::class, 'store'])->name('customer.bookings.store');
+    Route::get('/customer/bookings', [BookingController::class, 'index'])->name('customer.bookings.index');
+    Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::post('/customer/booking-pay/{booking}', [BookingController::class, 'payRoute'])->name('customer.booking.pay');
+
+
 
 });
 Route::get('/', [CostumerController::class, 'index']);

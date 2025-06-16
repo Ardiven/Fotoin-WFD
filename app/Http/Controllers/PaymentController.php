@@ -43,15 +43,13 @@ class PaymentController extends Controller
         }elseif (Auth::user()->hasRole('photographer')) {
             $user = Auth::user();
 
-            $payments = $user->packagePayments() // gunakan relasi dari user
-                ->latest() // urutkan dari yang terbaru
-                ->paginate(10)
-                ->withQueryString(); // pertahankan query string di pagination
+            $payments = $user->packagePayments()->latest()->paginate(10)->withQueryString();
 
-            $pendingCount = $user->packagePayments()->where('payments.status', 'pending')->count();
-            $completedCount = $user->packagePayments()->where('payments.status', 'completed')->count();
-            $processingCount = $user->packagePayments()->where('payments.status', 'processing')->count();
-            $totalRevenue = $user->packagePayments()->where('payments.status', 'completed')->sum('amount');
+            $pendingCount = $user->packagePayments()->where('status', 'pending')->count();
+            $completedCount = $user->packagePayments()->where('status', 'completed')->count();
+            $processingCount = $user->packagePayments()->where('status', 'processing')->count();
+            $totalRevenue = $user->packagePayments()->where('status', 'completed')->sum('amount');
+
 
             return view('payment.index', compact(
                 'payments',

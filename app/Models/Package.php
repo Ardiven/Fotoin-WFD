@@ -76,4 +76,8 @@ class Package extends Model
     {
         return $this->hasMany(Payment::class);
     }
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }
