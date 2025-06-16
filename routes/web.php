@@ -71,8 +71,8 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         return view('customer.chat');
     })->name('chat');
     Route::get('/customer/photographers', [CostumerController::class, 'showPhotographers'])->name('customer.photographers');
-    Route::get('/customer/payment/{package}', [PaymentController::class, 'create'])->name('customer.payment');
-    Route::post('/customer/payment/{package}', [PaymentController::class, 'store'])->name('customer.payment.store');
+    Route::get('/customer/payment/{booking}', [PaymentController::class, 'create'])->name('customer.payment');
+    Route::post('/customer/payment/{booking}', [PaymentController::class, 'store'])->name('customer.payment.store');
     Route::get('/customer/payment/detail/{payment}', [PaymentController::class, 'show'])->name('customer.payment.show');
     Route::post('/customer/payment/detail/{payment}', [PaymentController::class, 'uploadProof'])->name('customer.payment.proof');
     Route::post('/customer/payment/detail/{payment}/cancel', [PaymentController::class, 'cancel'])->name('customer.payment.cancel');

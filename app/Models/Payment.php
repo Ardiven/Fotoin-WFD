@@ -50,6 +50,11 @@ class Payment extends Model
         return $this->hasMany(PaymentProof::class);
     }
 
+    public function booking(): BelongsTo
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
     public function generatePaymentCode(): string
     {
         $prefix = 'PAY';

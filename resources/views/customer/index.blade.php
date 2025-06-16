@@ -67,6 +67,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Photographer Card 1 -->
                     @foreach($photographers as $photographer)
+                    @if($photographer->packages->count() > 0)
                     <div class="glass-effect rounded-2xl overflow-hidden border border-white/20 card-hover transition-all duration-500">
                         <div class="relative">
                             <img src="https://res.cloudinary.com/djv4xa6wu/image/upload/v1735722163/AbhirajK/Abhirajk%20mykare.webp" 
@@ -104,6 +105,7 @@
                             </a>
                         </div>
                     </div>
+                    @endif
 
                     @endforeach
                 </div>

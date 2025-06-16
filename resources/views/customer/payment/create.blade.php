@@ -31,8 +31,8 @@
                     
                     <div class="p-8 space-y-6">
                         <div class="text-center">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $package->name }}</h3>
-                            <p class="text-gray-600 leading-relaxed">{{ $package->description }}</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $booking->package->name }}</h3>
+                            <p class="text-gray-600 leading-relaxed">{{ $booking->package->description }}</p>
                         </div>
 
                         <div class="bg-gray-50 rounded-xl p-6">
@@ -43,7 +43,7 @@
                                 Fitur Paket
                             </h4>
                             <ul class="space-y-3">
-                                @foreach($package->features as $feature)
+                                @foreach($booking->package->features as $feature)
                                 <li class="flex items-center text-gray-700 bg-white rounded-lg p-3 border border-gray-200">
                                     <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                                     <span class="font-medium">{{ $feature->name }}</span>
@@ -55,12 +55,12 @@
                         <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="text-center">
-                                    <div class="text-2xl font-bold text-blue-600">{{ $package->duration }}</div>
+                                    <div class="text-2xl font-bold text-blue-600">{{ $booking->package->duration }}</div>
                                     <div class="text-sm text-gray-600 font-medium">Jam</div>
                                 </div>
                                 <div class="text-center">
                                     <div class="text-2xl font-bold text-purple-600">
-                                        Rp {{ number_format($package->price, 0, ',', '.') }}
+                                        Rp {{ number_format($booking->package->price, 0, ',', '.') }}
                                     </div>
                                     <div class="text-sm text-gray-600 font-medium">Total Harga</div>
                                 </div>
@@ -76,7 +76,7 @@
                         <p class="text-purple-100">Pilih cara pembayaran yang nyaman</p>
                     </div>
 
-                    <form action="{{route('customer.payment.store', $package)}}" method="POST" class="p-8 space-y-8">
+                    <form action="{{route('customer.payment.store', $booking)}}" method="POST" class="p-8 space-y-8">
                         @csrf
 
                         <!-- Enhanced Payment Method -->
@@ -174,8 +174,8 @@
                                             <div>
                                                 <div class="font-bold text-gray-900 mb-1">Bayar Penuh</div>
                                                 <div class="text-sm text-gray-500">
-                                                    <span class="line-through text-gray-400">Rp {{ number_format($package->price, 0, ',', '.') }}</span>
-                                                    <span class="text-green-600 font-bold ml-2">Rp {{ number_format($package->price * 0.95, 0, ',', '.') }}</span>
+                                                    <span class="line-through text-gray-400">Rp {{ number_format($booking->package->price, 0, ',', '.') }}</span>
+                                                    <span class="text-green-600 font-bold ml-2">Rp {{ number_format($booking->package->price * 0.95, 0, ',', '.') }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -192,8 +192,8 @@
                                             <div>
                                                 <div class="font-bold text-gray-900 mb-1">DP 50%</div>
                                                 <div class="text-sm text-gray-500">
-                                                    <div>DP: <span class="font-semibold">Rp {{ number_format($package->price * 0.5, 0, ',', '.') }}</span></div>
-                                                    <div>Pelunasan: <span class="font-semibold">Rp {{ number_format($package->price * 0.5, 0, ',', '.') }}</span></div>
+                                                    <div>DP: <span class="font-semibold">Rp {{ number_format($booking->package->price * 0.5, 0, ',', '.') }}</span></div>
+                                                    <div>Pelunasan: <span class="font-semibold">Rp {{ number_format($booking->package->price * 0.5, 0, ',', '.') }}</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -210,7 +210,7 @@
                                             <div>
                                                 <div class="font-bold text-gray-900 mb-1">Cicilan 3x</div>
                                                 <div class="text-sm text-gray-500">
-                                                    <span class="font-semibold">Rp {{ number_format($package->price / 3, 0, ',', '.') }}</span> per bulan
+                                                    <span class="font-semibold">Rp {{ number_format($booking->package->price / 3, 0, ',', '.') }}</span> per bulan
                                                     <span class="text-orange-600 ml-1">(+2% admin)</span>
                                                 </div>
                                             </div>
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Price calculation display
     function updatePriceDisplay() {
         const selectedInstallment = document.querySelector('input[name="installment_type"]:checked');
-        const packagePrice = {{ $package->price }};
+        const packagePrice = {{ $booking->package->price }};
         
         if (selectedInstallment) {
             let displayPrice = packagePrice;

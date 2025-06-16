@@ -35,9 +35,9 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Detail Paket</h2>
                     <div class="flex items-start space-x-4">
-                        @if($installment->payment->package->image)
-                        <img src="{{ asset('storage/' . $installment->payment->package->image) }}" 
-                             alt="{{ $installment->payment->package->name }}"
+                        @if($installment->payment->booking->package->image)
+                        <img src="{{ asset('storage/' . $installment->payment->booking->package->image) }}" 
+                             alt="{{ $installment->payment->booking->package->name }}"
                              class="w-20 h-20 object-cover rounded-lg">
                         @else
                         <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
@@ -49,9 +49,9 @@
                         @endif
                         
                         <div class="flex-1">
-                            <h3 class="text-lg font-semibold text-gray-900">{{ $installment->payment->package->name }}</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">{{ $installment->payment->booking->package->name }}</h3>
                             <p class="text-gray-600 mb-2">
-                                Fotografer: <span class="font-medium">{{ $installment->payment->package->user->name }}</span>
+                                Fotografer: <span class="font-medium">{{ $installment->payment->booking->package->user->name }}</span>
                             </p>
                             <p class="text-sm text-gray-500">
                                 Kode Pembayaran: {{ $installment->payment->payment_code }}

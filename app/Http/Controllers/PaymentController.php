@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\Package;
 use App\Models\Payment;
@@ -64,13 +65,20 @@ class PaymentController extends Controller
 
     }
 
-    public function create(Package $package)
+   public function create(Booking $booking)
     {
-        $photographer = User::find($package->user_id);
-        return view('customer.payment.create', compact('package', 'photographer'));
+        $booking->load('package');
+
+        if (!$booking->package) {
+            abort(404, 'Paket tidak ditemukan untuk booking ini.');
+        }
+
+        $photographer = User::find($booking->package->user_id);
+        return view('customer.payment.create', compact('booking', 'photographer'));
     }
 
-    public function store(Request $request, Package $package)
+
+    public function store(Request $request, Booking $booking)
     {
         $request->validate([
             'payment_method' => 'required|in:bank_transfer,e_wallet,credit_card,cash',
@@ -83,9 +91,9 @@ class PaymentController extends Controller
         try {
             $payment = new Payment();
             $payment->user_id = Auth::id();
-            $payment->package_id = $package->id;
+            $payment->booking_id = $booking->id;
             $payment->payment_code = $payment->generatePaymentCode();
-            $payment->amount = $package->price;
+            $payment->amount = $booking->package->price;
             $payment->payment_method = $request->payment_method;
             $payment->notes = $request->notes;
             $payment->expired_at = now()->addDays(3); // 3 hari untuk pembayaran

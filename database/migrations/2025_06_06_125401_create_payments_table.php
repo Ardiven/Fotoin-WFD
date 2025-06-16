@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('package_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('booking_id')->constrained()->cascadeOnDelete();
             $table->string('payment_code')->unique();
             $table->decimal('amount', 12, 2);
             $table->enum('payment_method', ['bank_transfer', 'e_wallet', 'credit_card', 'cash']);

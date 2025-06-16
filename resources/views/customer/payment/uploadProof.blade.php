@@ -322,9 +322,9 @@
                     <!-- Package Info -->
                     <div class="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <div class="flex items-center space-x-3">
-                            @if($installment->payment->package->image)
-                            <img src="{{ asset('storage/' . $installment->payment->package->image) }}" 
-                                 alt="{{ $installment->payment->package->name }}"
+                            @if($installment->payment->booking->package->image)
+                            <img src="{{ asset('storage/' . $installment->payment->booking->package->image) }}" 
+                                 alt="{{ $installment->payment->booking->package->name }}"
                                  class="w-12 h-12 object-cover rounded-lg border border-gray-200">
                             @else
                             <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center border border-gray-300">
@@ -334,7 +334,7 @@
                             </div>
                             @endif
                             <div>
-                                <h3 class="font-semibold text-gray-900 text-sm">{{ $installment->payment->package->name }}</h3>
+                                <h3 class="font-semibold text-gray-900 text-sm">{{ $installment->payment->booking->package->name }}</h3>
                                 <p class="text-xs text-gray-500">Paket Wisata</p>
                             </div>
                         </div>

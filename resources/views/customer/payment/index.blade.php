@@ -70,10 +70,10 @@
                         <div class="flex items-start justify-between mb-3">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900">
-                                    {{ $payment->package->name }}
+                                    {{ $payment->booking->package->name }}
                                 </h3>
                                 <p class="text-sm text-gray-600 mb-1">
-                                    Fotografer: <span class="font-medium">{{ $payment->package->user->name }}</span>
+                                    Fotografer: <span class="font-medium">{{ $payment->booking->package->user->name }}</span>
                                 </p>
                                 <p class="text-sm text-gray-600">
                                     Kode: {{ $payment->payment_code }}
