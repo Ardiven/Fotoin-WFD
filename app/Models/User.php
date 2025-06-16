@@ -74,6 +74,9 @@ public function portfolios()
     return $this->hasMany(Portfolio::class);
 
 }
+public function bookings() {
+    return $this->hasManyThrough(Booking::class, Package::class);
+}
 public function payments()
 {
     return $this->hasMany(Payment::class); 

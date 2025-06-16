@@ -25,23 +25,23 @@
         transform: translateY(-2px);
     }
     .status-pending {
-        background: rgba(255, 193, 7, 0.2);
-        color: #ffc107;
+        background-color: rgba(255, 193, 7, 0.595);
+        color: white;
         border: 1px solid rgba(255, 193, 7, 0.3);
     }
     .status-confirmed {
-        background: rgba(40, 167, 69, 0.2);
-        color: #28a745;
+        background-color: rgba(40, 167, 70, 0.718);
+        color: white;
         border: 1px solid rgba(40, 167, 69, 0.3);
     }
     .status-completed {
-        background: rgba(23, 162, 184, 0.2);
-        color: #17a2b8;
+        background-color: rgba(23, 163, 184, 0.659);
+        color: white;
         border: 1px solid rgba(23, 162, 184, 0.3);
     }
     .status-cancelled {
-        background: rgba(220, 53, 69, 0.2);
-        color: #dc3545;
+         background-color: rgba(220, 53, 70, 0.653);
+        color: white;
         border: 1px solid rgba(220, 53, 69, 0.3);
     }
     .filter-btn {
@@ -76,23 +76,23 @@
         color: rgba(255, 255, 255, 0.7);
     }
     .payment-status-pending {
-        color: #ffc107;
-        background-color: rgba(255, 193, 7, 0.2);
+        color:white;
+        background-color: rgba(255, 193, 7, 0.595);
         border: 1px solid rgba(255, 193, 7, 0.3);
     }
     .payment-status-processing {
-        color: #17a2b8;
-        background-color: rgba(23, 162, 184, 0.2);
+        color: white;
+        background-color: rgba(23, 163, 184, 0.659);
         border: 1px solid rgba(23, 162, 184, 0.3);
     }
-    .payment-status-completed {
-        color: #28a745;
-        background-color: rgba(40, 167, 69, 0.2);
+    .payment-status-paid {
+        color: white;
+        background-color: rgba(40, 167, 70, 0.718);
         border: 1px solid rgba(40, 167, 69, 0.3);
     }
     .payment-status-failed {
-        color: #dc3545;
-        background-color: rgba(220, 53, 69, 0.2);
+        color: white;
+        background-color: rgba(220, 53, 70, 0.653);
         border: 1px solid rgba(220, 53, 69, 0.3);
     }
     .urgent-booking {
@@ -309,13 +309,13 @@
 
                             @if($booking->status === 'confirmed')
                                 <!-- Mark as Completed -->
-                                <button onclick="completeBooking({{ $booking->id }})" 
+                                <button onclick="completeBooking({{ $booking->id }}, '{{ route('photographer.booking.complete', $booking->id) }}')" 
                                         class="px-4 py-2 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium">
                                     <i class="fas fa-check-circle mr-1"></i> Complete
                                 </button>
                             @endif
 
-                            @if($booking->status === 'completed')
+                            @if($booking->status === 'completed' && $booking->payment && $booking->payment_status === 'paid')
                                 <!-- Upload Photos -->
                                 <a href="#" 
                                    class="px-4 py-2 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium text-center">
@@ -513,7 +513,7 @@ function completeBooking(bookingId) {
     const modal = document.getElementById('completeModal');
     const form = document.getElementById('completeForm');
     
-    form.action = `/photographer/bookings/${bookingId}/complete`;
+    form.action = `/photographer/bookings-complete/${bookingId}`;
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 }
@@ -528,6 +528,9 @@ function closeCompleteModal() {
 function handleFormSubmission(formId) {
     document.getElementById(formId).addEventListener('submit', function(e) {
         e.preventDefault();
+        closeConfirmModal();
+        closeRejectModal();
+        closeCompleteModal();
 
         const form = this;
         const formData = new FormData(form);
@@ -554,7 +557,6 @@ function handleFormSubmission(formId) {
         })
         // Ganti Swal dengan showToast
         .then(data => {
-            closeConfirmModal();
             if (data.success) {
                 showToast(data.message || 'Berhasil!', 'success');
                 setTimeout(() => location.reload(), 1500);

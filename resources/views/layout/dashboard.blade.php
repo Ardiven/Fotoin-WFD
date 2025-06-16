@@ -134,10 +134,6 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button @click="showNotifications = !showNotifications" class="relative text-white/80 hover:text-white">
-                        <i class="fas fa-bell text-lg"></i>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
-                    </button>
                     <div class="relative">
                         <button @click="userMenuOpen = !userMenuOpen" class="flex items-center text-white/80 hover:text-white">
                             <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23667eea'/%3E%3Ctext x='16' y='20' text-anchor='middle' fill='white' font-family='Arial' font-size='14'%3EJS%3C/text%3E%3C/svg%3E" 
@@ -162,38 +158,6 @@
                                 </button>
                             </form>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Notifications Dropdown -->
-            <div x-show="showNotifications" @click.away="showNotifications = false" 
-                 x-transition
-                 class="absolute right-6 top-16 w-80 glass-effect border border-white/20 rounded-lg shadow-lg py-2">
-                <div class="px-4 py-2 border-b border-white/20">
-                    <h3 class="text-white font-semibold">Notifications</h3>
-                </div>
-                <div class="max-h-64 overflow-y-auto">
-                    <div class="px-4 py-3 text-white/80 border-b border-white/10">
-                        <div class="flex items-center">
-                            <i class="fas fa-calendar text-blue-400 mr-2"></i>
-                            <span class="text-sm">New booking request from Sarah Johnson</span>
-                        </div>
-                        <span class="text-xs text-white/60">2 hours ago</span>
-                    </div>
-                    <div class="px-4 py-3 text-white/80 border-b border-white/10">
-                        <div class="flex items-center">
-                            <i class="fas fa-message text-green-400 mr-2"></i>
-                            <span class="text-sm">New message from client</span>
-                        </div>
-                        <span class="text-xs text-white/60">5 hours ago</span>
-                    </div>
-                    <div class="px-4 py-3 text-white/80">
-                        <div class="flex items-center">
-                            <i class="fas fa-star text-yellow-400 mr-2"></i>
-                            <span class="text-sm">New review received</span>
-                        </div>
-                        <span class="text-xs text-white/60">1 day ago</span>
                     </div>
                 </div>
             </div>
@@ -243,12 +207,6 @@
                             <a href="{{route('photographer.portfolio.index')}}" 
                             class="w-full flex items-center px-4 py-3 rounded-lg transition-all text-white/80 hover:text-white hover:bg-white/10">
                                 <i class="fas fa-images mr-3"></i>Portfolio
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" 
-                            class="w-full flex items-center px-4 py-3 rounded-lg transition-all text-white/80 hover:text-white hover:bg-white/10">
-                                <i class="fas fa-chart-bar mr-3"></i>Analytics
                             </a>
                         </li>
                     </ul>

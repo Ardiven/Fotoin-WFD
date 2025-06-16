@@ -12,10 +12,16 @@ use Illuminate\Database\Eloquent\Builder;
 
 class CostumerController extends Controller
 {
-    public function index(){
-        $photographers = User::Role('photographer')->get();
+    public function index() {
+        $photographers = User::role('photographer')
+            ->withCount('bookings')
+            ->orderByDesc('bookings_count')
+            ->take(5)
+            ->get();
+
         return view('customer.index', compact('photographers'));
     }
+
     public function showProfile(User $photographer){
         return view('customer.show', compact('photographer'));
     }

@@ -62,6 +62,8 @@ class AdminPaymentController extends Controller
                     'status' => 'completed',
                     'paid_at' => now(),
                 ]);
+                $payment->booking->update(['status' => 'completed']);
+                $payment->booking->update(['payment_status' => 'paid']);
             } else {
                 $payment->update(['status' => 'processing']);
             }

@@ -10,6 +10,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CostumerController;
+use App\Http\Controllers\DashPhotoController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\PotofolioController;
 use App\Http\Controllers\AdminPaymentController;
@@ -22,7 +23,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register')->name('register');
 });
 Route::middleware(['auth', 'role:photographer'])->group(function () {
-    Route::get('/photographer/overview', function () {return view('photographer.overview');})->name('photographer.overview');
+    Route::get('/photographer/overview', [DashPhotoController::class, 'index'])->name('photographer.overview');
     Route::get('/photographer/profile', [UserController::class, 'showProfile'])->name('photographer.profile');
     Route::post('/photographer/profile', [UserController::class, 'update'])->name('photographer.profile.update');
     Route::get('/photographer/package', [PackageController::class, 'index'])->name('photographer.packages.index');
@@ -46,6 +47,7 @@ Route::middleware(['auth', 'role:photographer'])->group(function () {
 
     Route::get('/photographer/bookings', [BookingController::class, 'index'])->name('photographer.bookings.index');
     Route::patch('/photographer/bookings-confirm/{id}', [BookingController::class, 'confirm'])->name('photographer.booking.confirm');
+    Route::patch('/photographer/bookings-complete/{id}', [BookingController::class, 'complete'])->name('photographer.booking.complete');
 
     Route::get('/photographer/packages', function () {
         return view('photographer.packages');

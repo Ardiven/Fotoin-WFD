@@ -122,6 +122,27 @@ class BookingController extends Controller
 
         }
 
+    public function complete(Request $request, $id){
+        
+              $booking = Booking::findOrFail($id);
+            // Validasi input optional dari form
+            $request->validate([
+                'confirmation_message' => 'nullable|string|max:1000',
+            ]);
+
+            // Update status booking jadi confirmed
+            $booking->status = 'completed';
+            $booking->save();
+
+            // (Opsional) Kirim notifikasi ke client
+            // Notification::route(...)->notify(new BookingConfirmed(...));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dikirim!',
+            ]);
+    }
+
 
     public function create(Package $package){
         $photographer = User::find($package->user_id);
@@ -226,11 +247,11 @@ class BookingController extends Controller
 
         // Basic status counts
         $statusStats = [
-            'total' => $baseQuery->count(),
-            'pending' => $baseQuery->where('status', 'pending')->count(),
-            'confirmed' => $baseQuery->where('status', 'confirmed')->count(),
-            'completed' => $baseQuery->where('status', 'completed')->count(),
-            'cancelled' => $baseQuery->where('status', 'cancelled')->count(),
+            'total' => (clone $baseQuery)->count(),
+            'pending' => (clone $baseQuery)->where('status', 'pending')->count(),
+            'confirmed' => (clone $baseQuery)->where('status', 'confirmed')->count(),
+            'completed' => (clone $baseQuery)->where('status', 'completed')->count(),
+            'cancelled' => (clone $baseQuery)->where('status', 'cancelled')->count(),
         ];
 
         // Time-based statistics

@@ -19,7 +19,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-white/60 text-sm">Total Bookings</p>
-                        <p class="text-white text-2xl font-bold">142</p>
+                        <p class="text-white text-2xl font-bold">{{$totalBookings}}</p>
                     </div>
                     <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
                         <i class="fas fa-calendar-check text-blue-400"></i>
@@ -29,8 +29,19 @@
             <div class="stats-card border border-white/20 rounded-lg p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-white/60 text-sm">This Month Revenue</p>
-                        <p class="text-white text-2xl font-bold">$8,420</p>
+                        <p class="text-white/60 text-sm">This Month Bookings</p>
+                        <p class="text-white text-2xl font-bold">{{$totalBookingsThisMonth}}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-calendar-check text-blue-400"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stats-card border border-white/20 rounded-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                         <p class="text-white/60 text-sm">This Month Revenue</p>
+                        <p class="text-white text-2xl font-bold">Rp. {{number_format($totalRevenueThisMonth, 0, ',', '.')}}</p>
                     </div>
                     <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
                         <i class="fas fa-dollar-sign text-green-400"></i>
@@ -40,66 +51,12 @@
             <div class="stats-card border border-white/20 rounded-lg p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-white/60 text-sm">Portfolio Views</p>
-                        <p class="text-white text-2xl font-bold">2,847</p>
+                        <p class="text-white/60 text-sm">Total Revenue</p>
+                        <p class="text-white text-2xl font-bold">Rp. {{number_format($totalRevenue, 0, ',', '.')}}</p>
                     </div>
-                    <div class="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
-                        <i class="fas fa-eye text-purple-400"></i>
+                <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-dollar-sign text-green-400"></i>
                     </div>
-                </div>
-            </div>
-            <div class="stats-card border border-white/20 rounded-lg p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-white/60 text-sm">Client Rating</p>
-                        <p class="text-white text-2xl font-bold">4.9</p>
-                    </div>
-                    <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                        <i class="fas fa-star text-yellow-400"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="content-glass border border-white/20 rounded-lg p-6">
-            <h3 class="text-white text-lg font-semibold mb-4">Recent Activity</h3>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between py-3 border-b border-white/10">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-calendar text-blue-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white">New booking confirmed</p>
-                            <p class="text-white/60 text-sm">Wedding photography - Sarah & Mike</p>
-                        </div>
-                    </div>
-                    <span class="text-white/60 text-sm">2h ago</span>
-                </div>
-                <div class="flex items-center justify-between py-3 border-b border-white/10">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-dollar-sign text-green-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white">Payment received</p>
-                            <p class="text-white/60 text-sm">$1,200 for portrait session</p>
-                        </div>
-                    </div>
-                    <span class="text-white/60 text-sm">5h ago</span>
-                </div>
-                <div class="flex items-center justify-between py-3">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-images text-purple-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white">Portfolio updated</p>
-                            <p class="text-white/60 text-sm">Added 12 new wedding photos</p>
-                        </div>
-                    </div>
-                    <span class="text-white/60 text-sm">1d ago</span>
                 </div>
             </div>
         </div>
@@ -130,11 +87,7 @@
 @push('scripts')
 <script>
     document.addEventListener('alpine:init', () => {
-        Alpine.data('dashboardApp', () => ({
-            init() {
-                // Initialize any data or event listeners here
-            }
-        }))
+        
     })
 </script>
 @endpush
