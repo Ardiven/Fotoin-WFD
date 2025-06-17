@@ -1,59 +1,51 @@
-FROM node:18 as build
+# Stage 1: Build assets
+FROM node:18 AS frontend
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# Copy only the frontend files
+COPY package*.json vite.config.js ./
+COPY resources/ resources/
+COPY public/ public/
 
-COPY . .
-RUN npm rebuild esbuild
+RUN npm install
 RUN npm run build
 
-# Gunakan image resmi PHP dengan Apache
+# Stage 2: Install PHP and Laravel dependencies
 FROM php:8.2-apache
 
-# Install ekstensi yang dibutuhkan Laravel
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    libzip-dev unzip git curl \
-    && docker-php-ext-install pdo pdo_mysql zip
+    git unzip curl libpq-dev libzip-dev \
+    && docker-php-ext-install pdo_pgsql zip
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-
-# Salin semua file ke dalam container
-COPY . /var/www/html
-
-# Set permission
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
-
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
-
-# Aktifkan Apache rewrite module
+# Enable Apache rewrite module
 RUN a2enmod rewrite
+
+# Copy Composer from official image
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Jalankan Composer
-RUN composer install
+# Copy entire Laravel app
+COPY . .
 
+# Copy built assets from frontend stage
+COPY --from=frontend /app/public/build public/build
 
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
+# Set Apache to serve from /public
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
 
+# Install Laravel PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
+# Expose port for Render
+EXPOSE 8080
 
-# Copy file .env.example ke .env
-RUN cp .env.example .env
-
-# Generate app key
-RUN php artisan key:generate
-
-# Jalankan database migrations
-RUN php artisan migrate
-
-RUN php artisan storage:link
-
-# Expose port 80
-EXPOSE 80
+# Start Laravel server (or apache)
+CMD ["apache2-foreground"]
