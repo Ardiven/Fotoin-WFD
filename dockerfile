@@ -35,7 +35,7 @@ RUN cp .env.example .env
 RUN php artisan key:generate
 
 # Jalankan database migrations
-RUN php artisan migrate --seed
+RUN php artisan migrate
 
 RUN php artisan storage:link
 
