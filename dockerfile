@@ -44,6 +44,17 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /et
 # Install Laravel PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
+# Clear cache
+RUN composer clear-cache
+
+# Copy file .env.example ke .env
+RUN cp .env.example .env
+
+# Generate app key
+RUN php artisan key:generate
+
+RUN php artisan storage:link
+
 # Expose port for Render
 EXPOSE 8080
 
