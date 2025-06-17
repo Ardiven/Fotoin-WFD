@@ -34,6 +34,9 @@ RUN cp .env.example .env
 # Generate app key
 RUN php artisan key:generate
 
+# Jalankan database migrations
+RUN php artisan migrate --seed
+
 RUN php artisan storage:link
 
 # Expose port 80
