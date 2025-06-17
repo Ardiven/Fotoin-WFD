@@ -27,6 +27,9 @@ WORKDIR /var/www/html
 # Jalankan Composer
 RUN composer install
 
+RUN npm install && npm run build
+
+
 
 # Copy file .env.example ke .env
 RUN cp .env.example .env
