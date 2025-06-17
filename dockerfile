@@ -30,7 +30,9 @@ WORKDIR /var/www/html
 # Jalankan Composer
 RUN composer install
 
-RUN npm install && npm run build
+# Setelah Node.js dan npm sudah terinstall
+RUN npm rebuild esbuild && npm install && npm run build
+
 
 
 
