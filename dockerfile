@@ -55,6 +55,9 @@ RUN php artisan key:generate
 
 RUN php artisan storage:link
 
+# Run database migrations
+RUN php artisan migrate
+
 # Expose port for Render
 EXPOSE 8080
 
