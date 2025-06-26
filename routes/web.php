@@ -28,21 +28,22 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/overview', [AdminController::class, 'index'])->name('admin.index');
     Route::get('admin/users', [AdminController::class, 'indexUser'])->name('admin.users');
     Route::get('admin/user-create', [AdminController::class, 'showCreateUser'])->name('admin.users.create');
-    Route::get('admin/user-edit', [AdminController::class, 'showEditUser'])->name('admin.users.edit');
-    Route::get('admin/user-show', [AdminController::class, 'showUser'])->name('admin.users.show');
-    Route::post('admin/user-destroy', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+    Route::get('admin/user-edit/{user}', [AdminController::class, 'showEditUser'])->name('admin.users.edit');
+    Route::get('admin/user-show/{user}', [AdminController::class, 'showUser'])->name('admin.users.show');
+    Route::post('admin/user-destroy/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+
     Route::get('admin/city', [AdminController::class, 'indexCity'])->name('admin.city.index');
-    Route::get('admin/city-create', [AdminController::class, 'showCreateUser'])->name('admin.cities.create');
-    Route::get('admin/city-edit', [AdminController::class, 'showEditUser'])->name('admin.cities.edit');
-    Route::get('admin/city-show', [AdminController::class, 'showUser'])->name('admin.cities.show');
-    Route::post('admin/city-destroy', [AdminController::class, 'destroyUser'])->name('admin.cities.destroy');
+    Route::get('admin/city-create', [AdminController::class, 'showCreateCity'])->name('admin.cities.create');
+    Route::get('admin/city-edit', [AdminController::class, 'editCity'])->name('admin.cities.edit');
+    Route::get('admin/city-show', [AdminController::class, 'showCity'])->name('admin.cities.show');
+    Route::post('admin/city-destroy', [AdminController::class, 'destroyCity'])->name('admin.cities.destroy');
 
     Route::get('admin/specialty', [AdminController::class, 'indexSpecialty'])->name('admin.specialties.index');
     Route::get('admin/specialty-create', [AdminController::class, 'showCreateSpecialty'])->name('admin.specialties.create');
     Route::get('admin/specialty-edit', [AdminController::class, 'showEditSpecialty'])->name('admin.specialties.edit');
     Route::get('admin/specialty-show', [AdminController::class, 'showSpecialty'])->name('admin.specialties.show');
     Route::post('admin/specialty-destroy', [AdminController::class, 'destroySpecialty'])->name('admin.specialties.destroy');
-
+    Route::patch('admin/specialty-toggle-status/{id}', [AdminController::class, 'toggleStatusSpecialty'])->name('admin.specialties.toggle-status');
 
 });
 Route::middleware(['auth', 'role:photographer'])->group(function () {

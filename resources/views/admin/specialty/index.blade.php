@@ -52,7 +52,7 @@
                     </div>
                     
                     <!-- Status Toggle -->
-                    <form action="#" method="POST" class="inline">
+                    <form action="{{ route('admin.specialties.toggle-status', $specialty->id) }}" method="POST" class="inline">
                         @csrf
                         @method('PATCH')
                         <button type="submit" 
