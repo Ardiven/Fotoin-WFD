@@ -172,7 +172,7 @@ class UserController extends Controller
             $cities = City::all();
             return view('photographer.Profile', compact('specialties', 'cities'));
         }elseif(Auth::user()->hasRole('admin')){
-            return view('admin.profile');
+            return view('admin.overview');
         }
     }
 }
