@@ -469,8 +469,8 @@
     <script>
     function photographerProfile() {
         return {
-            profilePhotoPreview: '{{ isset($photographer->profile_photo) ? asset("storage/" . $photographer->profile_photo) : "" }}',
-            bioText: '{{ old("bio", $photographer->bio ?? "") }}',
+            profilePhotoPreview: '{{ isset(Auth::user()->profile_photo) ? asset("storage/" . Auth::user()->profile_photo) : "" }}',
+            bioText: '{{ old("bio", Auth::user()->bio ?? "") }}',
 
             handlePhotoUpload(event) {
                 const file = event.target.files[0];

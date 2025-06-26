@@ -92,6 +92,9 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     Route::post('/customer/booking-pay/{booking}', [BookingController::class, 'payRoute'])->name('customer.booking.pay');
 
+    Route::get('/customer/profile', [UserController::class, 'showProfile'])->name('customer.profile');
+    Route::post('/customer/profile', [UserController::class, 'update'])->name('customer.profile.update');
+
 
 
 });

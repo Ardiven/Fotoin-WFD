@@ -23,12 +23,23 @@ class DatabaseSeeder extends Seeder
         Role::create(['name' => 'admin']);
 
         // Buat user contoh dan assign role
-        $user = User::factory()->create([
+        $photographer = User::factory()->create([
             'name' => 'Tes User',
             'email' => 'test@example.com',
             'password' => bcrypt('password'),
-        ]);
+        ])->assignRole('photographer');
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
+        ])
+        ->assignRole('admin');
 
-        $user->assignRole('photographer');
+        $customer = User::factory()->create([
+            'name' => 'Customer',
+            'email' => 'customer@example.com',
+            'password' => bcrypt('password'),
+        ])
+        ->assignRole('customer');
     }
 }

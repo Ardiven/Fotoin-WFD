@@ -58,64 +58,100 @@ class UserController extends Controller
 
     if ($user->hasRole('customer')) {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'whatsapp' => 'required',
-            'bio' => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'profile_photo'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'phone_number' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
+            'city' => 'nullable|string|max:100',
+            'preferred_photography_type' => 'nullable|string|max:100',
+            'budget_range' => 'nullable|in:under_1m,1m_3m,3m_5m,5m_10m,10m_20m,above_20m',
         ]);
 
+        if ($request->hasFile('profile_photo')) {
+            $profile_photo = $request->file('profile_photo');
+            $profile_photo_path = $profile_photo->store('profile_photos', 'public');
+            $user->profile_photo = $profile_photo_path;
+            $user->save();
+        }
+
+        // Update user basic info
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->CustomerProfile->update([
-            'phone' => $request->phone,
-            'whatsapp' => $request->whatsapp,
-            'bio' => $request->bio,
-        ]);
+        $user->save();
+
+        // Update atau create customer profile
+        $profileData = [
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'city' => $request->city,
+            'preferred_photography_type' => $request->preferred_photography_type,
+            'budget_range' => $request->budget_range,
+        ];
+
+        // Gunakan updateOrCreate untuk menangani kasus jika profile belum ada
+        $user->customerProfile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $profileData
+        );
+
+        // Handle draft save
+        if ($request->has('is_draft')) {
+            return back()->with('success', 'Draft profil customer berhasil disimpan.');
+        }
 
         return back()->with('success', 'Profil customer berhasil diperbarui.');
     }
-
-    // Photographer
-    $request->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'phone' => 'required',
-        'whatsapp' => 'required',
-        'bio' => 'required',
-        'experience_years' => 'required',
-        'specialties' => 'required|array|min:1',
-        'cities' => 'required|array|min:1',
-    ]);
-
-    $photographer = $user->PhotographerProfile;
-
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->save();
-
-    
-
-    if (!$photographer) {
-        $photographer = $user->PhotographerProfile()->create([
-            'phone' => $request->phone,
-            'whatsapp' => $request->whatsapp,
-            'bio' => $request->bio,
-            'experience_years' => $request->experience_years,
+    elseif($user->hasRole('photographer')){
+        // Photographer
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'profile_photo'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'phone' => 'required',
+            'whatsapp' => 'required',
+            'bio' => 'required',
+            'experience_years' => 'required',
+            'specialties' => 'required|array|min:1',
+            'cities' => 'required|array|min:1',
         ]);
-    } else {
+
+        if ($request->hasFile('profile_photo')) {
+            $profile_photo = $request->file('profile_photo');
+            $profile_photo_path = $profile_photo->store('profile_photos', 'public');
+            $user->profile_photo = $profile_photo_path;
+            $user->save();
+        }
+
         $photographer = $user->PhotographerProfile;
-        $photographer->phone = $request->phone;
-        $photographer->whatsapp = $request->whatsapp;
-        $photographer->bio = $request->bio;
-        $photographer->experience_years = $request->experience_years;
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        
+
+        if (!$photographer) {
+            $photographer = $user->PhotographerProfile()->create([
+                'phone' => $request->phone,
+                'whatsapp' => $request->whatsapp,
+                'bio' => $request->bio,
+                'experience_years' => $request->experience_years,
+            ]);
+        } else {
+            $photographer = $user->PhotographerProfile;
+            $photographer->phone = $request->phone;
+            $photographer->whatsapp = $request->whatsapp;
+            $photographer->bio = $request->bio;
+            $photographer->experience_years = $request->experience_years;
+        }
+
+        $photographer->save();
+        $user->specialties()->sync($request->specialties);
+        $user->cities()->sync($request->cities);
+
+        return back()->with('success', 'Profil fotografer berhasil diperbarui.');
     }
-
-    $photographer->save();
-    $user->specialties()->sync($request->specialties);
-    $user->cities()->sync($request->cities);
-
-    return back()->with('success', 'Profil fotografer berhasil diperbarui.');
 }
 
 
@@ -128,7 +164,9 @@ class UserController extends Controller
     }
     public function showProfile(){
         if (Auth::user()->hasRole('customer')) {
-            return view('costumer.index');
+            $cities = City::all();
+            $specialties = Specialty::all();
+            return view('customer.profile', compact('cities', 'specialties'));
         } elseif (Auth::user()->hasRole('photographer')) {
             $specialties = Specialty::all();
             $cities = City::all();

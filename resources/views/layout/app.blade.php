@@ -72,7 +72,7 @@
                         <div class="relative">
                             <button @click="userMenuOpen = !userMenuOpen" class="flex items-center text-white/80 hover:text-white transition-colors">
                                 <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-2">
-                                    <i class="fas fa-user text-sm"></i>
+                                    <img src="{{ asset("storage/" . Auth::user()->profile_photo)}}" alt="" class="w-8 h-8 rounded-full">
                                 </div>
                                 <span>{{ Auth::user()->name }}</span>
                                 <i class="fas fa-chevron-down ml-1 text-xs transition-transform" :class="{ 'rotate-180': userMenuOpen }"></i>
@@ -86,13 +86,9 @@
                                  x-transition:leave-start="opacity-100 scale-100"
                                  x-transition:leave-end="opacity-0 scale-95"
                                  class="absolute right-0 mt-2 w-48 glass-effect border border-white/20 rounded-lg shadow-lg py-2">
-                                <a href="{{ url('/profile') }}" class="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 transition-colors">
+                                <a href="{{ route('customer.profile') }}" class="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 transition-colors">
                                     <i class="fas fa-user mr-3"></i>
                                     Profile
-                                </a>
-                                <a href="{{ url('/dashboard') }}" class="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 transition-colors">
-                                    <i class="fas fa-tachometer-alt mr-3"></i>
-                                    Dashboard
                                 </a>
                                 <a href="{{ route('customer.bookings.index') }}" class="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 transition-colors">
                                     <i class="fas fa-calendar mr-3"></i>

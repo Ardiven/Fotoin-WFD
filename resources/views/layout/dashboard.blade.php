@@ -133,11 +133,10 @@
                         <h1 class="text-white text-xl font-bold">FotoIn Dashboard</h1>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4 block md:block lg:hidden">
                     <div class="relative">
                         <button @click="userMenuOpen = !userMenuOpen" class="flex items-center text-white/80 hover:text-white">
-                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23667eea'/%3E%3Ctext x='16' y='20' text-anchor='middle' fill='white' font-family='Arial' font-size='14'%3EJS%3C/text%3E%3C/svg%3E" 
-                                 class="w-8 h-8 rounded-full mr-2" alt="Profile">
+                            <img src="{{ asset("storage/" . Auth::user()->profile_photo)}}" alt="" class="w-10 h-10 rounded-full">
                             <span>{{Auth::user()->name}}</span>
                             <i class="fas fa-chevron-down ml-1 text-xs"></i>
                         </button>
@@ -145,12 +144,6 @@
                         <div x-show="userMenuOpen" @click.away="userMenuOpen = false" 
                              x-transition
                              class="absolute right-0 mt-2 w-48 glass-effect border border-white/20 rounded-lg shadow-lg py-2">
-                            <a href="#" class="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10">
-                                <i class="fas fa-user mr-3"></i>Profile
-                            </a>
-                            <a href="#" class="flex items-center px-4 py-2 text-white/80 hover:text-white hover:bg-white/10">
-                                <i class="fas fa-cog mr-3"></i>Settings
-                            </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="block w-full text-left px-4 py-2 text-white/80 hover:text-white hover:bg-white/10 transition-colors">
@@ -216,7 +209,7 @@
                 <div class="px-4 py-4 border-t border-white/20 flex-shrink-0">
                     <div class="flex items-center">
                         <div class="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center mr-3">
-                            <span class="text-white text-sm">JS</span>
+                            <img src="{{ asset("storage/" . Auth::user()->profile_photo)}}" alt="" class="w-10 h-10 rounded-full">
                         </div>
                         <div class="flex-1">
                             <p class="text-white text-sm font-medium">{{Auth::user()->name}}</p>
