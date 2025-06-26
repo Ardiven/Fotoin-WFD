@@ -29,7 +29,10 @@ class AuthController extends Controller
                 return redirect()->route('photographer.overview');
             } elseif ($user->hasRole('customer')) {
                 return redirect()->route('customer.index');
-            } else {
+            }elseif($user->hasRole('admin')) {
+                return redirect()->route('admin.index');
+            }
+            else {
                 Auth::logout();
                 return redirect()->route('user.login')->withErrors(['role' => 'Role tidak dikenali']);
             }

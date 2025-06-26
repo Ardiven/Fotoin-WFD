@@ -171,6 +171,8 @@ class UserController extends Controller
             $specialties = Specialty::all();
             $cities = City::all();
             return view('photographer.Profile', compact('specialties', 'cities'));
+        }elseif(Auth::user()->hasRole('admin')){
+            return view('admin.profile');
         }
     }
 }
