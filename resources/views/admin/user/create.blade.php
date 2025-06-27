@@ -67,11 +67,11 @@
                             User Role <span class="text-red-400">*</span>
                         </label>
                         <select id="role" name="role" required
-                                class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-400 @error('role') border-red-400 @enderror">
+                                class="w-full bg-white/50 border rounded-lg px-3 py-2 text-dark focus:outline-none focus:border-blue-400 @error('role') border-red-400 @enderror">
                             <option value="">Select Role</option>
                             <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                             <option value="photographer" {{ old('role') == 'photographer' ? 'selected' : '' }}>Photographer</option>
-                            <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User</option>
+                            <option value="customer" {{ old('role') == 'customer' ? 'selected' : '' }}>Customer</option>
                         </select>
                         @error('role')
                             <p class="text-red-400 text-sm mt-1">{{ $message }}</p>

@@ -120,7 +120,7 @@
                 
                 <div>
                     <label class="block text-white/60 text-sm font-medium mb-1">Role</label>
-                    <p class="text-white">{{ ucfirst($user->role) }}</p>
+                    <p class="text-white">{{ ucfirst($user->getRoleNames()->first()) }}</p>
                 </div>
                 
                 <div>
@@ -152,7 +152,7 @@
             <h3 class="text-lg font-semibold text-white mb-6">Account Actions</h3>
             
             <div class="flex flex-wrap gap-4">
-                <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" class="inline">
+                <form action="#" method="POST" class="inline">
                     @csrf
                     @method('PATCH')
                     <button type="submit" 

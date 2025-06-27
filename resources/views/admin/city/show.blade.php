@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layout.admin')
 
 @section('title', 'City Details')
 
@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
         <div class="flex items-center">
-            <a href="{{ route('admin.cities.index') }}" 
+            <a href="{{ route('admin.city.index') }}" 
                class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all mr-4">
                 <i class="fas fa-arrow-left mr-2"></i>Back
             </a>
@@ -17,11 +17,11 @@
             </div>
         </div>
         <div class="flex space-x-2">
-            <a href="{{ route('admin.cities.edit', $city) }}" 
+            <a href="{{ route('admin.city.edit', $city) }}" 
                class="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 px-4 py-2 rounded-lg transition-all">
                 <i class="fas fa-edit mr-2"></i>Edit
             </a>
-            <form action="{{ route('admin.cities.destroy', $city) }}" method="POST" class="inline">
+            <form action="{{ route('admin.city.destroy', $city) }}" method="POST" class="inline">
                 @csrf
                 @method('DELETE')
                 <button type="submit" 

@@ -18,6 +18,9 @@ class PortfolioController extends Controller
      */
     public function index(Request $request)
     {
+        if(!Auth::user()->photographerProfile){
+            return redirect()->route('photographer.profile')->with('error', 'Please complete your photographer profile first.');
+        }
         $query = Portfolio::with('specialty')->where('user_id', Auth::id());
 
         // Filter by specialty

@@ -100,6 +100,17 @@
                         </ul>
                     </div>
                 @endif
+                {{-- Flash message dari session --}}
+                @if (session('error'))
+                    <div class="glass-effect border border-red-500/20 rounded-lg p-4 mb-6 bg-red-500/10">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-exclamation-circle text-red-400 mr-2"></i>
+                            <h3 class="text-red-400 font-medium">Error:</h3>
+                        </div>
+                        <p class="text-red-300 text-sm">{{ session('error') }}</p>
+                    </div>
+                @endif
+
 
                 {{-- Success message --}}
                 @if (session('success'))

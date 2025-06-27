@@ -56,8 +56,6 @@
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="{{ url('/') }}" class="text-white/80 hover:text-white transition-colors font-semibold">Home</a>
                     <a href="{{ route('customer.photographers')}}" class="text-white/80 hover:text-white transition-colors">Photographers</a>
-                    <a href="{{ route('chat') }}" class="text-white/80 hover:text-white transition-colors">Contact</a>
-                    
                     @guest
                         <div class="flex space-x-2">
                             <a href="{{ route('login') }}" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all duration-300 border border-white/30">
@@ -71,9 +69,14 @@
                         <!-- User Dropdown -->
                         <div class="relative">
                             <button @click="userMenuOpen = !userMenuOpen" class="flex items-center text-white/80 hover:text-white transition-colors">
-                                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-2">
-                                    <img src="{{ asset("storage/" . Auth::user()->profile_photo)}}" alt="" class="w-8 h-8 rounded-full">
+                                <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-2 overflow-hidden">
+                                    @if (Auth::user()->profile_photo)
+                                        <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo" class="w-8 h-8 rounded-full object-cover">
+                                    @else
+                                        <i class="fas fa-user text-white text-sm"></i> {{-- fallback icon --}}
+                                    @endif
                                 </div>
+
                                 <span>{{ Auth::user()->name }}</span>
                                 <i class="fas fa-chevron-down ml-1 text-xs transition-transform" :class="{ 'rotate-180': userMenuOpen }"></i>
                             </button>

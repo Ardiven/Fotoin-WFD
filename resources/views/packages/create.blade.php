@@ -38,7 +38,7 @@
         @endif
 
         <!-- Package Form -->
-        <form method="POST" action="{{ isset($package) ? route('photographer.packages.update', $package->id) : route('photographer.packages.store') }}" id="packageForm">
+        <form method="POST" action="{{ isset($package) ? route('photographer.packages.update', $package) : route('photographer.packages.store') }}" id="packageForm">
             @csrf
             @if(isset($package))
                 @method('PUT')

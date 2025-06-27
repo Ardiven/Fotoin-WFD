@@ -165,12 +165,6 @@
                     <button class="filter-tab px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-300 backdrop-blur-sm border border-white/30" data-filter="price">
                         <i class="fas fa-dollar-sign mr-2"></i>{{ __('Price Range') }}
                     </button>
-                    <button class="filter-tab px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-300 backdrop-blur-sm border border-white/30" data-filter="rating">
-                        <i class="fas fa-star mr-2"></i>{{ __('Rating') }}
-                    </button>
-                    <button class="filter-tab px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-300 backdrop-blur-sm border border-white/30" data-filter="availability">
-                        <i class="fas fa-calendar mr-2"></i>{{ __('Availability') }}
-                    </button>
                     <button id="applyFiltersBtn" class="apply-filter-btn px-3 py-3 text-white font-semibold rounded-lg shadow-lg">
                         <i class="fas fa-filter mr-2"></i>
                         {{ __('Apply Filters') }}
@@ -242,48 +236,6 @@
                             <i class="fas fa-info-circle mr-1"></i>
                             {{ __('Leave empty for no limit') }}
                         </div>
-                    </div>
-                </div>
-
-                <div id="ratingFilter" class="filter-dropdown mb-4">
-                    <div class="flex flex-wrap gap-3">
-                        @for($i = 5; $i >= 3; $i--)
-                        <label class="flex items-center text-white cursor-pointer">
-                            <input type="radio" 
-                                   name="rating" 
-                                   class="rating-radio mr-2" 
-                                   value="{{ $i }}"
-                                   {{ request('rating') == $i ? 'checked' : '' }}>
-                            <span class="flex items-center">
-                                @for($j = 1; $j <= 5; $j++)
-                                    <i class="fas fa-star {{ $j <= $i ? 'text-yellow-400' : 'far fa-star text-yellow-400' }}"></i>
-                                @endfor
-                                <span class="ml-2">{{ $i == 5 ? '5 Stars' : $i . '+ Stars' }}</span>
-                            </span>
-                        </label>
-                        @endfor
-                    </div>
-                </div>
-
-                <div id="availabilityFilter" class="filter-dropdown mb-4">
-                    <div class="flex flex-wrap gap-3">
-                        @php
-                        $availabilityOptions = [
-                            'available' => __('Available Now'),
-                            'weekend' => __('Weekend Available'),
-                            'instant' => __('Instant Booking')
-                        ];
-                        @endphp
-                        
-                        @foreach($availabilityOptions as $value => $label)
-                        <label class="flex items-center text-white cursor-pointer">
-                            <input type="checkbox" 
-                                   class="availability-checkbox mr-2" 
-                                   value="{{ $value }}"
-                                   {{ in_array($value, request('availability', [])) ? 'checked' : '' }}>
-                            <span>{{ $label }}</span>
-                        </label>
-                        @endforeach
                     </div>
                 </div>
             </div>

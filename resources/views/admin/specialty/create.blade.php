@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layout.admin')
 
 @section('title', 'Create New Specialty')
 

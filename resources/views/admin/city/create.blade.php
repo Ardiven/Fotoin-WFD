@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layout.admin')
 
 @section('title', 'Create City')
 
@@ -6,7 +6,7 @@
 <div class="max-w-4xl mx-auto">
     <!-- Header -->
     <div class="flex items-center mb-8">
-        <a href="{{ route('admin.cities.index') }}" 
+        <a href="{{ route('admin.city.index') }}" 
            class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg transition-all mr-4">
             <i class="fas fa-arrow-left mr-2"></i>Back
         </a>
@@ -18,7 +18,7 @@
 
     <!-- Form -->
     <div class="content-glass rounded-lg border border-white/20 p-8">
-        <form action="{{ route('admin.cities.store') }}" method="POST">
+        <form action="{{ route('admin.city.store') }}" method="POST">
             @csrf
             
             <div class="mb-6">
@@ -42,7 +42,7 @@
                         class="bg-gradient-primary hover:bg-gradient-secondary text-white px-6 py-3 rounded-lg transition-all flex items-center">
                     <i class="fas fa-save mr-2"></i>Create City
                 </button>
-                <a href="{{ route('admin.cities.index') }}" 
+                <a href="{{ route('admin.city.index') }}" 
                    class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-lg transition-all flex items-center">
                     <i class="fas fa-times mr-2"></i>Cancel
                 </a>

@@ -1,19 +1,15 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Models\Payment;
 use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Contracts\Role;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use Illuminate\Container\Attributes\Auth;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CostumerController;
 use App\Http\Controllers\DashPhotoController;
 use App\Http\Controllers\PortfolioController;
-use App\Http\Controllers\PotofolioController;
 use App\Http\Controllers\AdminPaymentController;
 
 Route::controller(AuthController::class)->group(function () {
@@ -26,24 +22,29 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/overview', [AdminController::class, 'index'])->name('admin.index');
-    Route::get('admin/users', [AdminController::class, 'indexUser'])->name('admin.users');
+    Route::get('admin/users', [AdminController::class, 'indexUser'])->name('admin.users.index');
     Route::get('admin/user-create', [AdminController::class, 'showCreateUser'])->name('admin.users.create');
     Route::get('admin/user-edit/{user}', [AdminController::class, 'showEditUser'])->name('admin.users.edit');
     Route::get('admin/user-show/{user}', [AdminController::class, 'showUser'])->name('admin.users.show');
     Route::post('admin/user-destroy/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+    Route::post('admin/user-create/', [AdminController::class, 'storeUser'])->name('admin.users.store');
 
     Route::get('admin/city', [AdminController::class, 'indexCity'])->name('admin.city.index');
-    Route::get('admin/city-create', [AdminController::class, 'showCreateCity'])->name('admin.cities.create');
-    Route::get('admin/city-edit', [AdminController::class, 'editCity'])->name('admin.cities.edit');
-    Route::get('admin/city-show', [AdminController::class, 'showCity'])->name('admin.cities.show');
-    Route::post('admin/city-destroy', [AdminController::class, 'destroyCity'])->name('admin.cities.destroy');
+    Route::get('admin/city-create', [AdminController::class, 'showCreateCity'])->name('admin.city.create');
+    Route::get('admin/city-edit/{city}', [AdminController::class, 'editCity'])->name('admin.city.edit');
+    Route::put('admin/city-edit/{city}', [AdminController::class, 'updateCity'])->name('admin.city.update');
+    Route::get('admin/city-show/{city}', [AdminController::class, 'showCity'])->name('admin.city.show');
+    Route::delete('admin/city-destroy/{city}', [AdminController::class, 'destroyCity'])->name('admin.city.destroy');
+    Route::post('admin/city-create', [AdminController::class, 'storeCity'])->name('admin.city.store');
 
     Route::get('admin/specialty', [AdminController::class, 'indexSpecialty'])->name('admin.specialties.index');
     Route::get('admin/specialty-create', [AdminController::class, 'showCreateSpecialty'])->name('admin.specialties.create');
-    Route::get('admin/specialty-edit', [AdminController::class, 'showEditSpecialty'])->name('admin.specialties.edit');
-    Route::get('admin/specialty-show', [AdminController::class, 'showSpecialty'])->name('admin.specialties.show');
-    Route::post('admin/specialty-destroy', [AdminController::class, 'destroySpecialty'])->name('admin.specialties.destroy');
+    Route::get('admin/specialty-edit/{id}', [AdminController::class, 'showEditSpecialty'])->name('admin.specialties.edit');
+    Route::put('admin/specialty-edit/{id}', [AdminController::class, 'updateSpecialty'])->name('admin.specialties.update');
+    Route::get('admin/specialty-show/{id}', [AdminController::class, 'showSpecialty'])->name('admin.specialties.show');
+    Route::post('admin/specialty-destroy/{id}', [AdminController::class, 'destroySpecialty'])->name('admin.specialties.destroy');
     Route::patch('admin/specialty-toggle-status/{id}', [AdminController::class, 'toggleStatusSpecialty'])->name('admin.specialties.toggle-status');
+    Route::post('admin/specialty-create', [AdminController::class, 'storeSpecialty'])->name('admin.specialties.store');
 
 });
 Route::middleware(['auth', 'role:photographer'])->group(function () {
@@ -51,7 +52,7 @@ Route::middleware(['auth', 'role:photographer'])->group(function () {
     Route::get('/photographer/profile', [UserController::class, 'showProfile'])->name('photographer.profile');
     Route::post('/photographer/profile', [UserController::class, 'update'])->name('photographer.profile.update');
     Route::get('/photographer/package', [PackageController::class, 'index'])->name('photographer.packages.index');
-    // Route::post('/photographer/package', [PackageController::class, 'update'])->name('photographer.packages.update');
+    Route::put('/photographer/package', [PackageController::class, 'update'])->name('photographer.packages.update');
     Route::get('/photographer/package/create', [PackageController::class, 'create'])->name('photographer.packages.create');
     Route::post('/photographer/package/create', [PackageController::class, 'store'])->name('photographer.packages.store');
     Route::get('/photographer/package/{package}/edit', [PackageController::class, 'edit'])->name('photographer.packages.edit');
@@ -94,9 +95,6 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/customer/index', [CostumerController::class, 'index'])->name('customer.index');
     Route::get('/customer/profile/{photographer}', [CostumerController::class, 'showProfile'])->name('customer.photographers.show');
     Route::get('/customer/profile/showcase/{photographer}', [CostumerController::class, 'showPortfolio'])->name('customer.photographers.showcase');
-    Route::get('/customer/chat', function () {
-        return view('customer.chat');
-    })->name('chat');
     Route::get('/customer/photographers', [CostumerController::class, 'showPhotographers'])->name('customer.photographers');
 
     Route::get('/customer/payment/{booking}', [PaymentController::class, 'create'])->name('customer.payment');

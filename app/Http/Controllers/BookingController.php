@@ -50,6 +50,9 @@ class BookingController extends Controller
         // Data yang dikirim ke view
         return view('customer.booking.index', compact('bookings'));
     }elseif(Auth::user()->hasRole('photographer')) {
+        if(!Auth::user()->photographerProfile){
+            return redirect()->route('photographer.profile')->with('error', 'Please complete your photographer profile first.');
+        }
         $photographerId = Auth::id();
         
         // Build query for bookings

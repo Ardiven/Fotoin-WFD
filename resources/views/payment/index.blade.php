@@ -7,22 +7,22 @@
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Daftar Pembayaran</h1>
-            <p class="text-gray-600">Kelola semua pembayaran paket fotografer Anda</p>
+            <h1 class="text-3xl font-bold text-white mb-2">Daftar Pembayaran</h1>
+            <p class="text-white/80">Kelola semua pembayaran paket fotografer Anda</p>
         </div>
 
         <!-- Filter & Search -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="bg-white/10 rounded-lg shadow-md p-6 mb-6">
             <form method="GET" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-64">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
+                    <label for="search" class="block text-sm font-medium text-white mb-2">Cari</label>
                     <input type="text" name="search" id="search" value="{{ request('search') }}"
                            placeholder="Kode pembayaran atau nama paket..."
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                           class="w-full px-3 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 
                 <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <label for="status" class="block text-sm font-medium text-white mb-2">Status</label>
                     <select name="status" id="status" 
                             class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Semua Status</option>
@@ -35,7 +35,7 @@
                 </div>
                 
                 <div>
-                    <label for="method" class="block text-sm font-medium text-gray-700 mb-2">Metode</label>
+                    <label for="method" class="block text-sm font-medium text-white mb-2">Metode</label>
                     <select name="method" id="method"
                             class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Semua Metode</option>
@@ -63,7 +63,7 @@
         @if($payments->count() > 0)
         <div class="space-y-4">
             @foreach($payments as $payment)
-            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
+            <div class="bg-white/20 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
                 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                     <!-- Payment Info -->
                     <div class="flex-1">
@@ -193,17 +193,17 @@
 
         @else
         <!-- Empty State -->
-        <div class="bg-white rounded-lg shadow-md p-12 text-center">
+        <div class="bg-white/10 rounded-lg shadow-md p-12 text-center">
             <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-12 h-12 text-text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
             </div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">Belum Ada Pembayaran</h3>
-            <p class="text-gray-600 mb-6">Anda belum memiliki pembayaran. Pilih paket dan mulai proses pembayaran.</p>
+            <h3 class="text-xl font-semibold text-white mb-2">Belum Ada Pembayaran</h3>
+            <p class="text-white mb-6">Anda belum memiliki pembayaran. Pilih paket dan mulai proses pembayaran.</p>
             <a href="{{ route('customer.photographers') }}" 
-               class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 inline-block">
+               class="bg-blue-600/80 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 inline-block">
                 Cari Fotografer
             </a>
         </div>
@@ -211,7 +211,7 @@
 
         <!-- Summary Cards -->
         <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="bg-white/10 rounded-lg shadow-md p-4">
                 <div class="flex items-center">
                     <div class="p-2 bg-yellow-100 rounded-lg">
                         <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,13 +219,13 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-gray-600">Pending</p>
-                        <p class="text-xl font-semibold text-gray-900">{{ $pendingCount ?? 0 }}</p>
+                        <p class="text-sm text-white">Pending</p>
+                        <p class="text-xl font-semibold text-white">{{ $pendingCount ?? 0 }}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="bg-white/10 rounded-lg shadow-md p-4">
                 <div class="flex items-center">
                     <div class="p-2 bg-blue-100 rounded-lg">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -233,13 +233,13 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-gray-600">Diproses</p>
-                        <p class="text-xl font-semibold text-gray-900">{{ $processingCount ?? 0 }}</p>
+                        <p class="text-sm text-white">Diproses</p>
+                        <p class="text-xl font-semibold text-white">{{ $processingCount ?? 0 }}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="bg-white/10 rounded-lg shadow-md p-4">
                 <div class="flex items-center">
                     <div class="p-2 bg-green-100 rounded-lg">
                         <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -247,13 +247,13 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-gray-600">Lunas</p>
-                        <p class="text-xl font-semibold text-gray-900">{{ $completedCount ?? 0 }}</p>
+                        <p class="text-sm text-white">Lunas</p>
+                        <p class="text-xl font-semibold text-white">{{ $completedCount ?? 0 }}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-4">
+            <div class="bg-white/10 rounded-lg shadow-md p-4">
                 <div class="flex items-center">
                     <div class="p-2 bg-gray-100 rounded-lg">
                         <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,8 +261,8 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm text-gray-600">Total Pendapatan</p>
-                        <p class="text-xl font-semibold text-gray-900">
+                        <p class="text-sm text-white">Total Pendapatan</p>
+                        <p class="text-xl font-semibold text-white">
                             Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.') }}
                         </p>
                     </div>

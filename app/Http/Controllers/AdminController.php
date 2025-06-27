@@ -54,35 +54,39 @@ class AdminController extends Controller
             'totalRevenueThisMonth'
         ));
     }
-    public function indexUser(Request $request){
+    public function indexUser(Request $request)
+    {
         $query = User::query();
-        
-        // Search functionality
+
+        // Search
         if ($request->has('search') && $request->search) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%");
             });
         }
-        
-        // Filter by role
-        // if ($request->has('role') && $request->role) {
-        //     $query->where('role', $request->role);
-        // }
-        
+
+        // Filter by role (Spatie)
+        if ($request->has('role') && $request->role) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+
         // Filter by status
         // if ($request->has('status') && $request->status !== '') {
         //     $query->where('is_active', $request->status);
         // }
-        
+
         $users = $query->orderBy('created_at', 'desc')->paginate(10);
-        
+
         return view('admin.user.index', compact('users'));
     }
+
     public function showCreateUser()
     {
-        return view('admin.users.create');
+        return view('admin.user.create');
     }
     
     /**
@@ -94,7 +98,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,user,photographer',
+            'role' => 'required|in:admin,customer,photographer',
             'phone' => 'nullable|string|max:20',
             'is_active' => 'boolean'
         ]);
@@ -109,11 +113,10 @@ class AdminController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
             'phone' => $request->phone,
             'is_active' => $request->has('is_active') ? 1 : 0,
             'email_verified_at' => now()
-        ]);
+        ])->assignRole($request->role);
         
         return redirect()->route('admin.users.index')
             ->with('success', 'User berhasil ditambahkan!');
@@ -124,7 +127,7 @@ class AdminController extends Controller
      */
     public function showuser(User $user)
     {
-        return view('admin.users.show', compact('user'));
+        return view('admin.user.show', compact('user'));
     }
     
     /**
@@ -132,7 +135,7 @@ class AdminController extends Controller
      */
     public function showEditUser(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        return view('admin.user.edit', compact('user'));
     }
     
     /**
@@ -215,7 +218,7 @@ class AdminController extends Controller
     }
     public function showCreateCity()
     {
-        return view('admin.cities.create');
+        return view('admin.city.create');
     }
 
     /**
@@ -231,7 +234,7 @@ class AdminController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('admin.cities.index')
+        return redirect()->route('admin.city.index')
             ->with('success', 'City created successfully.');
     }
 
@@ -240,7 +243,7 @@ class AdminController extends Controller
      */
     public function showCity(City $city)
     {
-        return view('admin.cities.show', compact('city'));
+        return view('admin.city.show', compact('city'));
     }
 
     /**
@@ -248,7 +251,7 @@ class AdminController extends Controller
      */
     public function editCity(City $city)
     {
-        return view('admin.cities.edit', compact('city'));
+        return view('admin.city.edit', compact('city'));
     }
 
     /**
@@ -264,7 +267,7 @@ class AdminController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('admin.cities.index')
+        return redirect()->route('admin.city.index')
             ->with('success', 'City updated successfully.');
     }
 
@@ -275,7 +278,7 @@ class AdminController extends Controller
     {
         $city->delete();
 
-        return redirect()->route('admin.cities.index')
+        return redirect()->route('admin.city.index')
             ->with('success', 'City deleted successfully.');
     }
 
@@ -291,7 +294,7 @@ class AdminController extends Controller
     }
      public function showCreateSpecialty()
     {
-        return view('admin.specialties.create');
+        return view('admin.specialty.create');
     }
     public function storeSpecialty(Request $request){
         $validated = $request->validate([
@@ -324,7 +327,7 @@ class AdminController extends Controller
             abort(404);
         }
 
-        return view('admin.specialties.show', compact('specialty'));
+        return view('admin.specialty.show', compact('specialty'));
     }
 
     public function showEditSpecialty(string $id)
@@ -335,7 +338,7 @@ class AdminController extends Controller
             abort(404);
         }
 
-        return view('admin.specialties.edit', compact('specialty'));
+        return view('admin.specialty.edit', compact('specialty'));
     }
 
     public function updateSpecialty(Request $request, string $id)

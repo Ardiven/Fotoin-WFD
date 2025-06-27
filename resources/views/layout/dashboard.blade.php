@@ -135,9 +135,15 @@
                 </div>
                 <div class="flex items-center space-x-4 block md:block lg:hidden">
                     <div class="relative">
-                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center text-white/80 hover:text-white">
-                            <img src="{{ asset("storage/" . Auth::user()->profile_photo)}}" alt="" class="w-10 h-10 rounded-full">
-                            <span>{{Auth::user()->name}}</span>
+                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center text-white/80 hover:text-white space-x-2">
+                            @if (Auth::user()->profile_photo)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo" class="w-10 h-10 rounded-full object-cover">
+                            @else
+                                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-lg"></i>
+                                </div>
+                            @endif
+                            <span>{{ Auth::user()->name }}</span>
                             <i class="fas fa-chevron-down ml-1 text-xs"></i>
                         </button>
                         
@@ -208,9 +214,14 @@
                 <!-- User Section -->
                 <div class="px-4 py-4 border-t border-white/20 flex-shrink-0">
                     <div class="flex items-center">
-                        <div class="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center mr-3">
-                            <img src="{{ asset("storage/" . Auth::user()->profile_photo)}}" alt="" class="w-10 h-10 rounded-full">
+                        <div class="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center mr-3 overflow-hidden">
+                            @if (Auth::user()->profile_photo)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo" class="w-10 h-10 rounded-full object-cover">
+                            @else
+                                <i class="fas fa-user text-white text-lg"></i> {{-- Default icon if no photo --}}
+                            @endif
                         </div>
+
                         <div class="flex-1">
                             <p class="text-white text-sm font-medium">{{Auth::user()->name}}</p>
                             <p class="text-white/60 text-xs">Photographer</p>

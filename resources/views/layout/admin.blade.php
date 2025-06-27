@@ -172,7 +172,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{route('admin.users')}}" 
+                            <a href="{{route('admin.users.index')}}" 
                             class="w-full flex items-center px-4 py-3 rounded-lg transition-all text-white/80 hover:text-white hover:bg-white/10">
                                 <i class="fas fa-user mr-3"></i>User
                             </a>
@@ -196,9 +196,14 @@
                 <!-- User Section -->
                 <div class="px-4 py-4 border-t border-white/20 flex-shrink-0">
                     <div class="flex items-center">
-                        <div class="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center mr-3">
-                            <img src="{{ asset("storage/" . Auth::user()->profile_photo)}}" alt="" class="w-10 h-10 rounded-full">
+                        <div class="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center mr-3 overflow-hidden">
+                            @if (Auth::user()->profile_photo)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo" class="w-10 h-10 rounded-full object-cover">
+                            @else
+                                <i class="fas fa-user text-white text-xl"></i> {{-- Fallback icon --}}
+                            @endif
                         </div>
+
                         <div class="flex-1">
                             <p class="text-white text-sm font-medium">{{Auth::user()->name}}</p>
                             <p class="text-white/60 text-xs">Photographer</p>

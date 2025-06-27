@@ -13,6 +13,12 @@
 
 @section('content')
     <div class="space-y-6">
+        <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold text-white">User Management</h2>
+        <a href="{{ route('admin.users.create') }}" class="glass-effect border border-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/10">
+            <i class="fas fa-plus mr-2"></i>Add New User
+        </a>
+    </div>
         <!-- Alert Messages -->
         @if(session('success'))
             <div class="bg-green-500/20 border border-green-500/50 text-green-100 px-4 py-3 rounded-lg">
@@ -41,7 +47,7 @@
                         <option value="">All Roles</option>
                         <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="photographer" {{ request('role') == 'photographer' ? 'selected' : '' }}>Photographer</option>
-                        <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
+                        <option value="customer" {{ request('role') == 'customer' ? 'selected' : '' }}>Customer</option>
                     </select>
                 </div>
                 <div>

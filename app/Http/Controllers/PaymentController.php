@@ -41,6 +41,9 @@ class PaymentController extends Controller
                 'totalRevenue'
             ));
         }elseif (Auth::user()->hasRole('photographer')) {
+            if(!Auth::user()->photographerProfile){
+            return redirect()->route('photographer.profile')->with('error', 'Please complete your photographer profile first.');
+        }
             $user = Auth::user();
 
             $payments = $user->packagePayments()->latest()->paginate(10)->withQueryString();
