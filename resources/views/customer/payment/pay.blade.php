@@ -10,7 +10,7 @@
             <nav class="flex mb-4" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">
                     <li class="inline-flex items-center">
-                        <a href="{{ route('customer.payment.index') }}" class="text-gray-700 hover:text-blue-600">
+                        <a href="{{ route('customer.payment.index') }}" class="text-white hover:text-blue-600">
                             Riwayat Pembayaran
                         </a>
                     </li>
@@ -19,13 +19,13 @@
                             <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="ml-1 text-gray-500">Pembayaran Cicilan</span>
+                            <span class="ml-1 text-white">Pembayaran Cicilan</span>
                         </div>
                     </li>
                 </ol>
             </nav>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Pembayaran Cicilan</h1>
-            <p class="text-gray-600">Selesaikan pembayaran cicilan untuk paket fotografer Anda</p>
+            <h1 class="text-3xl font-bold text-white mb-2">Pembayaran Cicilan</h1>
+            <p class="text-white">Selesaikan pembayaran cicilan untuk paket fotografer Anda</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -170,7 +170,7 @@
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div class="bg-white p-4 rounded-lg border">
                                                 <div class="flex items-center mb-2">
-                                                    <img src="https://via.placeholder.com/30x20" alt="BCA" class="mr-2">
+                                                    <img src="https://i.pinimg.com/736x/0b/ed/5c/0bed5c44c43dc1efd1cbf6acf3aa1d89.jpg" alt="BCA" class="mr-2 w-24 h-20">
                                                     <span class="font-medium">Bank BCA</span>
                                                 </div>
                                                 <p class="text-sm text-gray-600">No. Rekening: 1234567890</p>
@@ -178,7 +178,7 @@
                                             </div>
                                             <div class="bg-white p-4 rounded-lg border">
                                                 <div class="flex items-center mb-2">
-                                                    <img src="https://via.placeholder.com/30x20" alt="Mandiri" class="mr-2">
+                                                    <img src="https://i.pinimg.com/736x/26/b3/4a/26b34ac4c3890d30ebc7a7ba9a829999.jpg" alt="Mandiri" class="mr-2 w-24 h-20">
                                                     <span class="font-medium">Bank Mandiri</span>
                                                 </div>
                                                 <p class="text-sm text-gray-600">No. Rekening: 0987654321</p>
@@ -193,19 +193,19 @@
                                         <h4 class="font-medium text-blue-800">Transfer ke E-Wallet:</h4>
                                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                             <div class="bg-white p-3 rounded-lg border text-center">
-                                                <img src="https://via.placeholder.com/40x40" alt="GoPay" class="mx-auto mb-2">
+                                                <img src="https://i.pinimg.com/736x/fe/ce/b2/feceb2ca508603b06c2f7ba18a5d018d.jpg" alt="GoPay" class="mx-auto mb-2 w-36 h-30">
                                                 <p class="text-xs text-gray-600">081234567890</p>
                                             </div>
                                             <div class="bg-white p-3 rounded-lg border text-center">
-                                                <img src="https://via.placeholder.com/40x40" alt="OVO" class="mx-auto mb-2">
+                                                <img src="https://i.pinimg.com/736x/76/1a/bf/761abfb9e4c628b0f4b9943c390e93b3.jpg" alt="OVO" class="mx-auto mb-2 w-36 h-30">
                                                 <p class="text-xs text-gray-600">081234567890</p>
                                             </div>
                                             <div class="bg-white p-3 rounded-lg border text-center">
-                                                <img src="https://via.placeholder.com/40x40" alt="DANA" class="mx-auto mb-2">
+                                                <img src="https://i.pinimg.com/736x/f5/8c/a3/f58ca3528b238877e9855fcac1daa328.jpg" alt="DANA" class="mx-auto mb-2 w-36 h-30">
                                                 <p class="text-xs text-gray-600">081234567890</p>
                                             </div>
                                             <div class="bg-white p-3 rounded-lg border text-center">
-                                                <img src="https://via.placeholder.com/40x40" alt="ShopeePay" class="mx-auto mb-2">
+                                                <img src="https://i.pinimg.com/736x/d0/19/16/d019163d861908ed0046391ebfa42ce1.jpg" alt="ShopeePay" class="mx-auto mb-2 w-36 h-30">
                                                 <p class="text-xs text-gray-600">081234567890</p>
                                             </div>
                                         </div>

@@ -74,6 +74,10 @@ class PaymentController extends Controller
             abort(404, 'Paket tidak ditemukan untuk booking ini.');
         }
 
+        if ($booking->status !== 'confirmed') {
+            return redirect()->back()->with('error', 'Booking belum dikonfirmasi.');
+        }
+
         $photographer = User::find($booking->package->user_id);
         return view('customer.payment.create', compact('booking', 'photographer'));
     }
@@ -106,7 +110,7 @@ class PaymentController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('customer.payment.show', $payment)
+                ->route('customer.payment.index')
                 ->with('success', 'Pembayaran berhasil dibuat. Silakan lakukan pembayaran sesuai instruksi.');
 
         } catch (\Exception $e) {

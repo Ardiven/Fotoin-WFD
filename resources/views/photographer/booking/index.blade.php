@@ -280,21 +280,21 @@
                         <!-- Actions -->
                         <div class="flex flex-col sm:flex-row gap-2 lg:flex-col lg:w-48">
                             <!-- View Details (always available) -->
-                            <a href="#" 
+                            {{-- <a href="#" 
                                class="px-4 py-2 bg-gradient-secondary text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center">
                                 <i class="fas fa-eye mr-1"></i> View Details
-                            </a>
+                            </a> --}}
 
                             @if($booking->status === 'pending')
                                 <!-- Confirm Button -->
                                 <button onclick="confirmBooking({{ $booking->id }}, '{{ route('photographer.booking.confirm', $booking->id) }}')"
-                                        class=" px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium">
+                                        class=" px-4 py-2 bg-green-500/20 text-white border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium">
                                     <i class="fas fa-check mr-1"></i> Confirm
                                 </button>
                                 
                                 <!-- Reject Button -->
                                 <button onclick="rejectBooking({{ $booking->id }}, '{{ route('photographer.booking.reject', $booking->id) }}')"
-                                        class="px-4 py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors text-sm font-medium">
+                                        class="px-4 py-2 bg-red-500/20 text-white border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors text-sm font-medium">
                                     <i class="fas fa-times mr-1"></i> Reject
                                 </button>
                             @endif
@@ -302,7 +302,7 @@
                             @if(in_array($booking->status, ['confirmed', 'completed']))
                                 <!-- Message Client -->
                                 <a href="#" 
-                                   class="px-4 py-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-colors text-sm font-medium text-center">
+                                   class="px-4 py-2 bg-blue-500/20 text-white border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-message mr-1"></i> Message
                                 </a>
                             @endif
@@ -310,7 +310,7 @@
                             @if($booking->status === 'confirmed')
                                 <!-- Mark as Completed -->
                                 <button onclick="completeBooking({{ $booking->id }}, '{{ route('photographer.booking.complete', $booking->id) }}')" 
-                                        class="px-4 py-2 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium">
+                                        class="px-4 py-2 bg-purple-500/20 text-white border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium">
                                     <i class="fas fa-check-circle mr-1"></i> Complete
                                 </button>
                             @endif
@@ -318,13 +318,13 @@
                             @if($booking->status === 'completed' && $booking->payment && $booking->payment_status === 'paid')
                                 <!-- Upload Photos -->
                                 <a href="#" 
-                                   class="px-4 py-2 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium text-center">
+                                   class="px-4 py-2 bg-purple-500/20 text-white border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-upload mr-1"></i> Upload Photos
                                 </a>
                                 
                                 <!-- View Reviews -->
                                 <a href="#" 
-                                   class="px-4 py-2 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm font-medium text-center">
+                                   class="px-4 py-2 bg-yellow-500/20 text-white border border-yellow-500/30 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-star mr-1"></i> View Review
                                 </a>
                             @endif

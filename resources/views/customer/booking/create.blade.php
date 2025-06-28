@@ -104,8 +104,8 @@
                                 </label>
 
                                 <select id="time" name="time" required
-                                        class="w-full px-4 py-2 rounded-lg border border-white/20 bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected>Select a time</option>
+                                        class="w-full px-4 py-2 rounded-lg border form-input text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option class="" value="" disabled selected>Select a time</option>
                                     <option value="09:00">09:00</option>
                                     <option value="10:00">10:00</option>
                                     <option value="11:00">11:00</option>
@@ -193,8 +193,8 @@
                             <!-- Submit Button -->
                             <div class="pt-4">
                                 <button type="submit" form="bookingForm" class="w-full bg-gradient-secondary hover:opacity-90 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 text-lg">
-                                    <i class="fas fa-credit-card mr-2"></i>
-                                    Proceed to Payment
+                                    <i class="fas fa-calendar mr-2"></i>
+                                    Booking
                                 </button>
                             </div>
                         </form>

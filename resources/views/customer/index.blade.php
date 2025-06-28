@@ -113,7 +113,7 @@
         </div>
 
         <!-- Featured Categories -->
-        <div class="relative py-16">
+        {{-- <div class="relative py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold text-white mb-4 text-glow">Featured Categories</h2>
@@ -182,7 +182,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Stats Section -->
         <div class="relative py-16">

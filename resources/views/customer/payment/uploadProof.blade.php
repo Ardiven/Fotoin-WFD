@@ -141,22 +141,15 @@
                                     </label>
                                     <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
                                         <div class="space-y-1 text-center">
-                                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
                                             <div class="flex text-sm text-gray-600">
                                                 <label for="payment_proof" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                                                    <span>Pilih file</span>
                                                     <input id="payment_proof" 
                                                            name="payment_proof" 
                                                            type="file"
                                                            accept="image/*"
-                                                           class="sr-only"
                                                            required>
                                                 </label>
-                                                <p class="pl-1">atau seret dan lepas</p>
                                             </div>
-                                            <p class="text-xs text-gray-500">PNG, JPG, JPEG hingga 2MB</p>
                                         </div>
                                     </div>
                                     @error('payment_proof')
@@ -406,74 +399,30 @@
 {{-- Simple JavaScript for file preview (optional) --}}
 @push('scripts')
 <script>
+// Fixed JavaScript untuk upload bukti pembayaran dengan preview
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('payment_proof');
+    const dropZone = document.querySelector('.border-dashed');
+    const form = document.querySelector('form');
     
+    // File input change handler
     if (fileInput) {
         fileInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                // Simple file size validation
-                const maxSize = 10 * 1024 * 1024; // 2MB
-                if (file.size > maxSize) {
-                    alert('Ukuran file terlalu besar. Maksimal 2MB');
+                if (validateFile(file)) {
+                    showFilePreview(file);
+                } else {
                     this.value = '';
-                    return;
-                    }
-                
-                // File type validation
-                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-                if (!allowedTypes.includes(file.type)) {
-                    alert('Format file tidak didukung. Gunakan PNG, JPG, atau JPEG');
-                    this.value = '';
-                    return;
+                    removePreview();
                 }
-                
-                // Optional: Show file name in UI
-                console.log('File selected:', file.name);
-            }
-        });
-    }
-    
-    // Form validation before submit
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const requiredFields = ['payment_proof', 'payment_date', 'account_name'];
-            let isValid = true;
-            
-            requiredFields.forEach(fieldName => {
-                const field = document.querySelector(`[name="${fieldName}"]`);
-                if (field && !field.value.trim()) {
-                    isValid = false;
-                    console.log(`Field ${fieldName} is required`);
-                }
-            });
-            
-            if (!isValid) {
-                e.preventDefault();
-                alert('Mohon lengkapi semua field yang wajib diisi');
-            }
-        });
-    }
-    
-    // Date validation - prevent future dates
-    const dateInput = document.getElementById('payment_date');
-    if (dateInput) {
-        dateInput.addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const today = new Date();
-            today.setHours(23, 59, 59, 999); // Set to end of today
-            
-            if (selectedDate > today) {
-                alert('Tanggal pembayaran tidak boleh lebih dari hari ini');
-                this.value = new Date().toISOString().split('T')[0]; // Reset to today
+            } else {
+                removePreview();
             }
         });
     }
     
     // Enhanced drag and drop functionality
-    const dropZone = document.querySelector('.border-dashed');
     if (dropZone) {
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, preventDefaults, false);
@@ -509,79 +458,161 @@ document.addEventListener('DOMContentLoaded', function() {
             if (files.length > 0) {
                 const file = files[0];
                 
-                // Validate file
-                const maxSize = 2 * 1024 * 1024; // 2MB
-                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-                
-                if (file.size > maxSize) {
-                    alert('Ukuran file terlalu besar. Maksimal 2MB');
-                    return;
-                }
-                
-                if (!allowedTypes.includes(file.type)) {
-                    alert('Format file tidak didukung. Gunakan PNG, JPG, atau JPEG');
-                    return;
-                }
-                
-                // Assign to file input
-                const fileInput = document.getElementById('payment_proof');
-                if (fileInput) {
-                    // Create a new FileList with the dropped file
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    fileInput.files = dataTransfer.files;
-                    
-                    // Trigger change event
-                    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+                if (validateFile(file)) {
+                    // Assign to file input
+                    if (fileInput) {
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        fileInput.files = dataTransfer.files;
+                        showFilePreview(file);
+                    }
                 }
             }
         }
     }
     
-    // Optional: Show file preview
+    // File validation function
+    function validateFile(file) {
+        const maxSize = 2 * 1024 * 1024; // 2MB
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        
+        if (file.size > maxSize) {
+            alert('Ukuran file terlalu besar. Maksimal 2MB');
+            return false;
+        }
+        
+        if (!allowedTypes.includes(file.type)) {
+            alert('Format file tidak didukung. Gunakan PNG, JPG, atau JPEG');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // Show file preview function
     function showFilePreview(file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            // Create preview element if it doesn't exist
-            let preview = document.getElementById('file-preview');
-            if (!preview) {
-                preview = document.createElement('div');
-                preview.id = 'file-preview';
-                preview.className = 'mt-4 p-4 bg-gray-50 rounded-lg border';
-                dropZone.parentNode.insertBefore(preview, dropZone.nextSibling);
-            }
+            // Remove existing preview
+            removePreview();
+            
+            // Create preview element
+            const preview = document.createElement('div');
+            preview.id = 'file-preview';
+            preview.className = 'mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200';
             
             preview.innerHTML = `
-                <div class="flex items-center space-x-3">
-                    <img src="${e.target.result}" alt="Preview" class="w-16 h-16 object-cover rounded-lg border">
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">${file.name}</p>
-                        <p class="text-xs text-gray-500">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <img src="${e.target.result}" 
+                                 alt="Preview" 
+                                 class="w-16 h-16 object-cover rounded-lg border border-gray-300 shadow-sm">
+                            <div class="absolute -top-2 -right-2">
+                                <button type="button" 
+                                        onclick="removeFilePreview()" 
+                                        class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">${file.name}</p>
+                            <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                            <p class="text-xs text-green-600 mt-1 flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                File siap diupload
+                            </p>
+                        </div>
                     </div>
-                    <button type="button" onclick="removePreview()" class="text-red-600 hover:text-red-800">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
                 </div>
             `;
+            
+            // Insert preview after the drop zone
+            if (dropZone && dropZone.parentNode) {
+                dropZone.parentNode.insertBefore(preview, dropZone.nextSibling);
+            }
         };
+        
+        reader.onerror = function() {
+            console.error('Error reading file');
+            alert('Error membaca file. Silakan coba lagi.');
+        };
+        
         reader.readAsDataURL(file);
     }
     
-    // Add file preview functionality
-    if (fileInput) {
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                showFilePreview(file);
+    // Date validation - prevent future dates
+    const dateInput = document.getElementById('payment_date');
+    if (dateInput) {
+        dateInput.addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(23, 59, 59, 999);
+            
+            if (selectedDate > today) {
+                alert('Tanggal pembayaran tidak boleh lebih dari hari ini');
+                this.value = new Date().toISOString().split('T')[0];
             }
         });
     }
+    
+    // Form validation before submit
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const requiredFields = [
+                { name: 'payment_proof', label: 'Bukti Pembayaran' },
+                { name: 'payment_date', label: 'Tanggal Pembayaran' },
+                { name: 'account_name', label: 'Nama Pemilik Rekening' }
+            ];
+            
+            let isValid = true;
+            let missingFields = [];
+            
+            requiredFields.forEach(field => {
+                const element = document.querySelector(`[name="${field.name}"]`);
+                if (element && !element.value.trim()) {
+                    isValid = false;
+                    missingFields.push(field.label);
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert(`Mohon lengkapi field berikut:\n- ${missingFields.join('\n- ')}`);
+                return;
+            }
+            
+            // Show loading state
+            showLoadingState();
+        });
+    }
+    
+    // Show loading state for form submission
+    function showLoadingState() {
+        const submitButton = form?.querySelector('button[type="submit"]');
+        
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML = `
+                <span class="flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Mengupload...
+                </span>
+            `;
+        }
+    }
 });
 
-// Global function to remove preview
-function removePreview() {
+// Global function to remove preview (dipanggil dari button onclick)
+function removeFilePreview() {
     const preview = document.getElementById('file-preview');
     const fileInput = document.getElementById('payment_proof');
     
@@ -594,25 +625,17 @@ function removePreview() {
     }
 }
 
-// Optional: Add loading state for form submission
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const submitButton = form?.querySelector('button[type="submit"]');
-    
-    if (form && submitButton) {
-        form.addEventListener('submit', function() {
-            // Disable submit button and show loading state
-            submitButton.disabled = true;
-            submitButton.innerHTML = `
-                <span class="flex items-center justify-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Mengupload...
-                </span>
-            `;
-        });
-    }
-});
+// Global function to remove preview (untuk konsistensi)
+function removePreview() {
+    removeFilePreview();
+}
+
+// File size formatter
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
 @endpush

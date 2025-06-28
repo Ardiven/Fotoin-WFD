@@ -234,7 +234,7 @@ class BookingController extends Controller
             
             DB::commit();
             
-            return redirect()->route('customer.payment', $booking)->with('success', 'Booking berhasil dibuat.');
+            return redirect()->route('customer.bookings.index')->with('success', 'Booking berhasil dibuat.');
             
         } catch (\Exception $e) {
             DB::rollback();

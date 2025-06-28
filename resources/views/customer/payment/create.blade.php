@@ -3,7 +3,7 @@
 @section('title', 'Pembayaran Paket')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8">
+<div class="min-h-screen bg-gradient-auth py-8">
     <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
             <!-- Enhanced Header with Animation -->
@@ -13,10 +13,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                     </svg>
                 </div>
-                <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-3">
+                <h1 class="text-4xl font-bold text-white mb-3">
                     Pembayaran Paket
                 </h1>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                <p class="text-xl text-white max-w-2xl mx-auto">
                     Lengkapi pembayaran untuk paket fotografer profesional Anda
                 </p>
             </div>
@@ -35,7 +35,7 @@
                             <p class="text-gray-600 leading-relaxed">{{ $booking->package->description }}</p>
                         </div>
 
-                        <div class="bg-gray-50 rounded-xl p-6">
+                        <div class="bg-white/20 rounded-xl p-6">
                             <h4 class="font-bold text-gray-900 mb-4 flex items-center">
                                 <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
@@ -91,7 +91,7 @@
                                         </div>
                                         <div class="flex-1">
                                             <div class="font-bold text-gray-900 mb-1">Transfer Bank</div>
-                                            <div class="text-sm text-gray-500">BCA, Mandiri, BNI, BRI</div>
+                                            <div class="text-sm text-gray-500">BCA, Mandiri</div>
                                         </div>
                                         <div class="text-blue-500">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,24 +114,6 @@
                                         <div class="text-green-500">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </label>
-
-                                <label class="payment-option group">
-                                    <input type="radio" name="payment_method" value="credit_card" class="sr-only">
-                                    <div class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-300 group-hover:border-purple-300 group-hover:shadow-md">
-                                        <div class="w-6 h-6 border-2 border-gray-300 rounded-full mr-4 flex items-center justify-center group-hover:border-purple-500">
-                                            <div class="w-3 h-3 bg-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="font-bold text-gray-900 mb-1">Kartu Kredit</div>
-                                            <div class="text-sm text-gray-500">Visa, MasterCard, JCB</div>
-                                        </div>
-                                        <div class="text-purple-500">
-                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                             </svg>
                                         </div>
                                     </div>
@@ -164,9 +146,6 @@
                                 <label class="installment-option group">
                                     <input type="radio" name="installment_type" value="full" class="sr-only" required>
                                     <div class="p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-300 group-hover:border-green-300 group-hover:shadow-md relative">
-                                        <div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                            DISKON 5%
-                                        </div>
                                         <div class="flex items-center">
                                             <div class="w-6 h-6 border-2 border-gray-300 rounded-full mr-4 flex items-center justify-center group-hover:border-green-500">
                                                 <div class="w-3 h-3 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -174,8 +153,8 @@
                                             <div>
                                                 <div class="font-bold text-gray-900 mb-1">Bayar Penuh</div>
                                                 <div class="text-sm text-gray-500">
-                                                    <span class="line-through text-gray-400">Rp {{ number_format($booking->package->price, 0, ',', '.') }}</span>
-                                                    <span class="text-green-600 font-bold ml-2">Rp {{ number_format($booking->package->price * 0.95, 0, ',', '.') }}</span>
+                                                    {{-- <span class="line-through text-gray-400">Rp {{ number_format($booking->package->price, 0, ',', '.') }}</span> --}}
+                                                    <span class="text-green-600 font-bold ml-2">Rp {{ number_format($booking->package->price, 0, ',', '.') }}</span>
                                                 </div>
                                             </div>
                                         </div>

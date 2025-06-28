@@ -160,7 +160,7 @@
                     <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                         <div class="flex items-start gap-4 flex-1">
                             <!-- Photographer Avatar -->
-                            <img src="{{ $booking->package->user->profile_photo ?? 'https://ui-avatars.com/api/?name=' . urlencode($booking->package->user->name) . '&background=667eea&color=fff&size=128' }}" 
+                            <img src="{{ asset("storage/" . $booking->package->user->profile_photo) }}" 
                                  alt="{{ $booking->package->user->name }}" 
                                  class="w-16 h-16 rounded-full border-2 border-white/30 object-cover flex-shrink-0">
                             
@@ -251,15 +251,15 @@
                         <!-- Actions -->
                         <div class="flex flex-col sm:flex-row gap-2 lg:flex-col lg:w-48">
                             <!-- View Details (always available) -->
-                            <a href="{{ route('bookings.show', $booking->id) }}" 
+                            {{-- <a href="{{ route('bookings.show', $booking->id) }}" 
                                class="px-4 py-2 bg-gradient-secondary text-white rounded-lg hover:opacity-90 transition-opacity text-sm font-medium text-center">
                                 <i class="fas fa-eye mr-1"></i> View Details
-                            </a>
+                            </a> --}}
 
                             @if($booking->status === 'pending')
                                 <!-- Cancel Button -->
                                 <button onclick="cancelBooking({{ $booking->id }})" 
-                                        class="px-4 py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors text-sm font-medium">
+                                        class="px-4 py-2 bg-red-500/20 text-white border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors text-sm font-medium">
                                     <i class="fas fa-times mr-1"></i> Cancel
                                 </button>
 
@@ -268,7 +268,7 @@
                             @if(in_array($booking->status, ['confirmed', 'completed']))
                                 <!-- Message Photographer -->
                                 <a href="#" 
-                                   class="px-4 py-2 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-colors text-sm font-medium text-center">
+                                   class="px-4 py-2 bg-blue-500/20 text-white border border-blue-500/30 rounded-lg hover:bg-blue-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-message mr-1"></i> Message
                                 </a>
                             @endif
@@ -278,7 +278,7 @@
                                 <form action="{{ route('customer.booking.pay', $booking) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" 
-                                            class="w-full px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium">
+                                            class="w-full px-4 py-2 bg-green-500/20 text-white border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium">
                                         <i class="fas fa-credit-card mr-1"></i> Pay Now
                                     </button>
                                 </form>
@@ -288,13 +288,13 @@
                             @if($booking->status === 'completed' && $booking->payment && $booking->payment_status === 'paid')
                                 <!-- View Photos -->
                                 <a href="#" 
-                                   class="px-4 py-2 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium text-center">
+                                   class="px-4 py-2 bg-purple-500/20 text-white border border-purple-500/30 rounded-lg hover:bg-purple-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-images mr-1"></i> View Photos
                                 </a>
                                 
                                 <!-- Leave Review -->
                                 <a href="#" 
-                                   class="px-4 py-2 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm font-medium text-center">
+                                   class="px-4 py-2 bg-yellow-500/20 text-white border border-yellow-500/30 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-star mr-1"></i> Leave Review
                                 </a>
                             @endif
@@ -302,7 +302,7 @@
                             @if($booking->status === 'cancelled')
                                 <!-- Book Again -->
                                 <a href="{{route('customer.photographers.show', $booking->package->user)}}" 
-                                   class="px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium text-center">
+                                   class="px-4 py-2 bg-green-500/20 text-white border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium text-center">
                                     <i class="fas fa-redo mr-1"></i> Book Again
                                 </a>
                             @endif
